@@ -128,7 +128,7 @@ export default {
     ],
     gestion: [
       { text: "Máquinas de Riego", icon: "mdi-watering-can-outline" },
-      { text: "Siembra", icon: "mdi-upload" },
+      { text: "Siembra (Me falta algunas cosas)", icon: "mdi-upload" },
       {
         text: "Químicos(Falta)",
         icon: "mdi-flask-empty-outline",
