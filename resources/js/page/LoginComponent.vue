@@ -147,30 +147,11 @@ export default {
           localStorage.setItem("token", res.data.token);
           if (res.data.isAdmin) {
             this.$router.push("/admin")
-            .then(res => {
-              localStorage.setItem("token", res.data.token);
-              console.log(res)
-            })
-            .catch((error) => {
-              // console.log(error.response)
-            });
           }
           if (res.data.editor) {
             this.$router
             .push("/test")
             .then((res) => {
-              localStorage.setItem("token", res.data.token);
-              console.log(res.data.editor)
-            })
-            .catch((error) => {
-              // console.log(error.response)
-            });
-          }
-           if (res.data.invitado) {
-            this.$router
-            .push("/test")
-            .then((res) => {
-              localStorage.setItem("token", res.data.token);
               console.log(res.data.editor)
             })
             .catch((error) => {

@@ -7,10 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ueb extends Model
 {
     protected $fillable = [
-        'name',
-        'total_maquinas_riego',
-        'maquinas_listas',
-        'afectaciones',
+        'name', 
     ];
 
     protected $casts = [
@@ -24,6 +21,14 @@ class Ueb extends Model
     public function quimicos() 
     {
         return $this->hasMany(Quimico::class);
+    }
+    public function energia() 
+    {
+        return $this->hasMany(Energia::class);
+    }
+    public function maquinas() 
+    {
+        return $this->hasMany(Maquinas::class);
     }
 }
 

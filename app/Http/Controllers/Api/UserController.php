@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Str;
 use App\Http\Resources\User as UserResource;
+use Illuminate\Auth\Access\Gate;
 
 class UserController extends Controller
 {
@@ -19,7 +20,11 @@ class UserController extends Controller
      */
     public function index()
     {
-      return response()->json(['user' => UserResource::collection( User::all()), 'roles' => Role::pluck('name')->all()], 200);
+      // if(Auth::user()->Admin()) {
+        
+        return response()->json(['user' => UserResource::collection( User::all()), 'roles' => Role::pluck('name')->all()], 200);
+      // }
+      // return response()->json(['message' => 'Forbidden'], 403);
     }
 
     /**
@@ -78,28 +83,35 @@ class UserController extends Controller
     }
     public function login (Request $request) 
     {
-       $credentials =$request->only('email', 'password');
+      $credentials =$request->only('email', 'password');
 
-       if(Auth::attempt($credentials)) {
-          $token = Str::random(80);
-          Auth::user()->api_token = $token;
-          Auth::user()->save();
+      if(Auth::attempt($credentials)) {
+        $token = Str::random(80);
+        Auth::user()->api_token = $token;
+        Auth::user()->save();
 
-          $isAdmin = Auth::user()->isAdmin();
-          $editor = Auth::user()->editor();
-          $invitado = Auth::user()->invitado();
+        $isAdmin = Auth::user()->isAdmin();
+        $editor = Auth::user()->editor();
 
-         return response()->json([
-           'token' => $token, 
-           'isAdmin' => $isAdmin, 
-           'editor' => $editor,
-           'invitado' => $invitado,
-          ], 200);
-       }
+        return response()->json([
+          'token' => $token, 
+          'isAdmin' => $isAdmin, 
+          'editor' => $editor,
+        ], 200);
+      }
       return response()->json(['status' => 'Correo y contraseña incorrectos'], 403);
     }
 
     public function verify (Request $request) {
       return $request->user()->only('name', 'email');
-   }
+    }
+
+    public function verifyEmail(Request $request)
+    {
+      $request->validate([
+        'email' => 'required|unique:users'
+      ]);
+
+      return response()->json(['messages' => 'Correo Valido'], 200);
+    }
 }

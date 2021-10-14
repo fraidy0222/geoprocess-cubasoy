@@ -1,31 +1,5 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="primary" text-color="white">
-          Máquinas de riego: {{ rowTotal("total_maquinas_riego") }}
-          <v-icon right> mdi-gauge-full </v-icon>
-        </v-chip>
-      </v-col>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="success" text-color="white">
-          Máquinas Listas: {{ rowTotal("maquinas_listas") }}
-          <v-icon right> mdi-checkbox-marked-circle </v-icon>
-        </v-chip>
-      </v-col>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="error" text-color="white">
-          Máquinas Rotas: {{ rotas("maquinas_rotas") }}
-          <v-icon right> mdi-close-circle </v-icon>
-        </v-chip>
-      </v-col>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="warning" text-color="white">
-          Fecha: {{ this.date }}
-          <v-icon right> mdi-clock </v-icon>
-        </v-chip>
-      </v-col>
-    </v-row>
     <v-data-table
       item-key="id"
       class="elevation-1"
@@ -42,11 +16,6 @@
         'items-per-page-text': 'Ueb por páginas',
       }"
     >
-      <template v-slot:[`item.maquinas_listas`]="{ item }">
-        <v-chip color="success" dark>
-          {{ item.maquinas_listas }}
-        </v-chip>
-      </template>
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>UEB</v-toolbar-title>
@@ -67,7 +36,7 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <v-col cols="12" md="6" sm="4">
+                      <v-col cols="12">
                         <v-text-field
                           v-model="editedItem.name"
                           label="Nombre"
@@ -75,71 +44,22 @@
                           :rules="Rules"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" md="6" sm="4">
-                        <v-text-field
-                          v-model="editedItem.total_maquinas_riego"
-                          label="Máquinas de Riego"
-                          required
-                          :rules="Rules"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" md="6" sm="4">
-                        <v-text-field
-                          v-model="editedItem.maquinas_listas"
-                          label="Máquinas listas"
-                          required
-                          :rules="Rules"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" md="6" sm="4">
-                        <v-textarea
-                          v-model="editedItem.afectaciones"
-                          auto-grow
-                          label="Afectaciones"
-                          required
-                          :rules="Rules"
-                          rows="1"
-                        ></v-textarea>
-                      </v-col>
-                      <v-col cols="12" md="6" sm="4">
-                        <v-autocomplete
-                          v-model="editedItem.maquinas_rotas"
-                          :items="options"
-                          chips
-                          clearable
-                          multiple
-                          item-text="name"
-                          label="Máquinas rotas"
-                          append-icon="mdi-chevron-down"
-                        >
-                          <template
-                            v-slot:selection="{ attr, on, item, selected }"
-                          >
-                            <v-chip
-                              v-bind="attr"
-                              :input-value="selected"
-                              color="red"
-                              class="white--text"
-                              v-on="on"
-                            >
-                              <span>{{ item }}</span>
-                            </v-chip>
-                          </template>
-                        </v-autocomplete>
-                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="close">
+                 <v-btn 
+                    color="red darken-1" 
+                    outlined
+                    @click="close">
                     Cancelar
                   </v-btn>
-                  <v-btn
-                    color="blue darken-1"
-                    text
+                  <v-btn 
+                    color="primary"
+                    :disabled="!valid" 
                     type="submit"
-                    :disabled="!valid"
+                    @click.prevent="save"
                   >
                     Guardar
                   </v-btn>
@@ -148,14 +68,14 @@
             </v-form>
           </v-dialog>
           <v-dialog persistent v-model="dialogDelete" max-width="500px">
-            <v-card color="error" dark>
+            <v-card >
               <v-card-title class="headline"
                 >¿Estás seguro de borrar esta UEB?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="dark" text @click="closeDelete">Cancelar</v-btn>
-                <v-btn color="dark" text @click="deleteItemConfirm"
+                <v-btn outlined  @click="closeDelete">Cancelar</v-btn>
+                <v-btn depressed color="error" @click="deleteItemConfirm"
                   >Borrar</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -219,6 +139,7 @@
 </template>
 
 <script>
+
 export default {
   data: () => ({
     valid: true,
@@ -230,7 +151,6 @@ export default {
     snackbar: false,
     snackColor: "",
     timeout: 2000,
-    options: [],
     modal: false,
     date: new Date().toISOString().substr(0, 10),
     headers: [
@@ -241,10 +161,8 @@ export default {
         value: "id",
       },
       { text: "Nombre", value: "name" },
-      { text: "Máquinas de Riego", value: "total_maquinas_riego" },
-      { text: "Listas", value: "maquinas_listas" },
-      { text: "Rotas", value: "maquinas_rotas" },
-      { text: "Afectaciones", value: "afectaciones" },
+      { text: "Creada", value: "created_at" },
+      { text: "Actualizda", value: "updated_at" },
       { text: "Acciones", value: "actions", sortable: false },
     ],
     uebs: [],
@@ -252,25 +170,18 @@ export default {
     Rules: [(v) => !!v || "Este campo es requerido"],
     editedItem: {
       id: "",
-      name: "",
-      total_maquinas_riego: "",
-      maquinas_listas: "",
-      maquinas_rotas: "",
-      afectaciones: "",
+      name: "",     
     },
     defaultItem: {
       id: "",
       name: "",
-      total_maquinas_riego: "",
-      maquinas_listas: "",
-      maquinas_rotas: "",
     },
   }),
   computed: {
     formTitle() {
       return this.editedIndex === -1
-        ? "Nueva Máquina de Riego"
-        : "Editar Máquina de Riego";
+        ? "Nueva UEB"
+        : "Editar UEB";
     },
   },
 
@@ -285,7 +196,6 @@ export default {
 
   created() {
     this.initialize();
-    this.listado();
   },
 
   methods: {
@@ -342,14 +252,14 @@ export default {
         .delete("api/ueb/" + this.editedItem.id)
         .then((res) => {
           this.uebs.splice(this.editedIndex, 1);
-          (this.snackbar = true),
-            (this.text = "UEB eliminada"),
-            (this.snackColor = "success");
+          this.snackbar = true,
+          this.text = "UEB eliminada",
+          this.snackColor = "success";
         })
         .catch((err) => {
-          (this.snackbar = true),
-            (this.text = "Ha occurido un error"),
-            (this.snackColor = "error");
+          this.snackbar = true,
+          this.text = "Ha occurido un error",
+          this.snackColor = "error";
           console.log(err.response);
         });
       this.closeDelete();
@@ -376,10 +286,6 @@ export default {
         axios
           .put("api/ueb/" + this.editedItem.id, {
             name: this.editedItem.name,
-            total_maquinas_riego: this.editedItem.total_maquinas_riego,
-            maquinas_listas: this.editedItem.maquinas_listas,
-            maquinas_rotas: this.editedItem.maquinas_rotas,
-            afectaciones: this.editedItem.afectaciones,
           })
           .then((res) => {
             this.initialize();
@@ -396,36 +302,22 @@ export default {
         axios
           .post("api/ueb", {
             name: this.editedItem.name,
-            total_maquinas_riego: this.editedItem.total_maquinas_riego,
-            maquinas_listas: this.editedItem.maquinas_listas,
-            maquinas_rotas: this.editedItem.maquinas_rotas,
-            afectaciones: this.editedItem.afectaciones,
           })
           .then((res) => {
+            console.log(res)
             this.uebs.push(res.data.ueb);
-            (this.snackbar = true),
-              (this.text = "UEB añadida"),
-              (this.snackColor = "success");
+            this.snackbar = true,
+             this.text = "UEB añadida",
+            this.snackColor = "success";
           })
           .catch((err) => {
-            (this.snackbar = true),
-              (this.text = "Ha occurido un error"),
-              (this.snackColor = "error");
+            this.snackbar = true,
+            this.text = "Ha occurido un error",
+            this.snackColor = "error";
             console.log(err.response);
           });
       }
       this.close();
-    },
-    listado() {
-      for (let index = 0; index < 1000; index++) {
-        this.options.push(`${index}`);
-      }
-    },
-    rowTotal(base) {
-      return this.uebs.reduce((sum, cur) => (sum += cur[base]), 0);
-    },
-    rotas(base) {
-      return this.uebs.reduce((sum, cur) => (sum += cur[base].length), 0);
     },
   },
 };

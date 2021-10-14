@@ -16,10 +16,6 @@ class CreateUebsTable extends Migration
         Schema::create('uebs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name', 255);
-            $table->integer('total_maquinas_riego');
-            $table->integer('maquinas_listas');
-            $table->string('afectaciones', 255);
-            $table->json('maquinas_rotas');
             $table->timestamps();
         });
     }

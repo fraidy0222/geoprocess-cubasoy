@@ -44,6 +44,9 @@
                 <v-icon>mdi-plus</v-icon>
                 Añadir
               </v-btn>
+               <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
+                Exportar a Word
+              </v-btn>
             </template>
             <v-card>
               <v-card-title>
@@ -90,14 +93,16 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="close">
+                  <v-btn 
+                    color="red darken-1" 
+                    outlined
+                    @click="close">
                     Cancelar
                   </v-btn>
-                  <v-btn
-                    color="blue darken-1"
-                    text
+                  <v-btn 
+                    color="primary"
+                    :disabled="!valid" 
                     type="submit"
-                    :disabled="!valid"
                     @click.prevent="save"
                   >
                     Guardar
@@ -107,14 +112,14 @@
             </v-card>
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
-            <v-card color="error" dark>
+            <v-card>
               <v-card-title class="headline"
                 >¿Estás seguro de borrar esta ausencia?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="dark" text @click="closeDelete">Cancelar</v-btn>
-                <v-btn color="dark" text @click="deleteItemConfirm"
+                <v-btn outlined  @click="closeDelete">Cancelar</v-btn>
+                <v-btn depressed color="error" @click="deleteItemConfirm"
                   >Borrar</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -178,6 +183,11 @@
 </template>
 
 <script>
+// docxtemplater
+import Docxtemplater from "docxtemplater";
+import PizZip from "pizzip";
+import PizZipUtils from "pizzip/utils/index.js";
+
 export default {
   props: {
     number: {
@@ -362,6 +372,62 @@ export default {
     },
      rowTotal(base) {
       return this.valores.reduce((sum, cur) => (sum += cur[base]), 0);
+    },
+    loadFile(url, callback) {
+      PizZipUtils.getBinaryContent(url, callback);
+    },
+    renderDoc() {
+      let valores = this.valores;
+      this.loadFile("/documentos/valores.docx", function(
+        error,
+        content
+      ) {
+        if (error) {
+          throw error;
+        }
+        const zip = new PizZip(content);
+        const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
+        doc.setData({ valores });
+        try {
+          // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
+          doc.render();
+        } catch (error) {
+          // The error thrown here contains additional information when logged with JSON.stringify (it contains a properties object containing all suberrors).
+          function replaceErrors(key, value) {
+            if (value instanceof Error) {
+              return Object.getOwnPropertyNames(value).reduce(function(
+                error,
+                key
+              ) {
+                error[key] = value[key];
+                return error;
+              },
+              {});
+            }
+            return value;
+          }
+          console.log(JSON.stringify({ error: error }, replaceErrors));
+
+          if (error.properties && error.properties.errors instanceof Array) {
+            const errorMessages = error.properties.errors
+              .map(function(error) {
+                return error.properties.explanation;
+              })
+              .join("\n");
+            console.log("errorMessages", errorMessages);
+            // errorMessages is a humanly readable message looking like this :
+            // 'The tag beginning with "foobar" is unopened'
+          }
+          throw error;
+        }
+        const out = doc.getZip().generate({
+          type: "blob",
+          mimeType:
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        });
+        // Output the document using Data-URI
+        saveAs(out, "valores.docx");
+      });
     },
   },
 };

@@ -42,6 +42,7 @@ class QuimicosController extends Controller
           'comienza' => $request->comienza,
           'termina' => $request->termina,
         ]);
+        
         $quimicos->ueb()->associate($ueb);
   
         $quimicos->save();

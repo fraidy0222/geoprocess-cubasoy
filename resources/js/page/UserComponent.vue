@@ -45,8 +45,12 @@
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
+                          type="email"
                           v-model="editedItem.email"
                           label="Correo"
+                          :success-messages="success"
+                          :error-messages="error"
+                          @blur="checkEmail"
                           :rules="[rules.required, rules.email]"
                         ></v-text-field>
                       </v-col>
@@ -82,31 +86,33 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="close">
-                    Cancelar
-                  </v-btn>
-                  <v-btn
-                    color="blue darken-1"
-                    text
+                  <v-btn 
+                    color="red darken-1" 
+                    outlined
+                    @click="close">
+                      Cancelar
+                    </v-btn>
+                    <v-btn 
+                    color="primary"
+                    :disabled="!valid" 
                     type="submit"
-                    :disabled="!valid"
                     @click.prevent="save"
-                  >
-                    Guardar
-                  </v-btn>
+                    >
+                      Guardar
+                    </v-btn>
                 </v-card-actions>
               </v-form>
             </v-card>
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
-            <v-card color="error" dark>
+            <v-card>
               <v-card-title class="headline"
                 >¿Estás seguro de borrar este usuario?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="dark" text @click="closeDelete">Cancelar</v-btn>
-                <v-btn color="dark" text @click="deleteItemConfirm"
+                <v-btn outlined  @click="closeDelete">Cancelar</v-btn>
+                <v-btn depressed color="error" @click="deleteItemConfirm"
                   >Borrar</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -148,7 +154,7 @@
         </v-tooltip>
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+        <v-btn color="primary" @click="initialize"> Reinicar </v-btn>
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
@@ -172,6 +178,9 @@
 <script>
 export default {
   data: () => ({
+    state: {
+      nombre: 'San Lius',
+    },
     search: "",
     dialog: false,
     loading: false,
@@ -180,7 +189,10 @@ export default {
     snackbar: false,
     snackColor: "",
     timeout: 2000,
+    success: '',
+    error: '',
     roles: [],
+    test: [],
     rules: {
       required: (v) => !!v || "Este campo es requerido",
       email: (v) => /.+@.+\..+/.test(v) || "El correo debe ser válido",
@@ -298,14 +310,14 @@ export default {
         .delete("api/user/" + this.editedItem.id)
         .then((res) => {
           this.users.splice(this.editedIndex, 1);
-          (this.snackbar = true),
-            (this.text = "Rol eliminado"),
-            (this.snackColor = "success");
+          this.snackbar = true,
+          this.text = "Usuario eliminado",
+          this.snackColor = "success";
         })
         .catch((err) => {
-          (this.snackbar = true),
-            (this.text = "Ha occurido un error"),
-            (this.snackColor = "error");
+          this.snackbar = true,
+          this.text = "Ha occurido un error",
+          this.snackColor = "error";
           console.log(err.response);
         });
       this.closeDelete();
@@ -334,8 +346,8 @@ export default {
           .then(res => {
             this.initialize();
             this.snackbar = true,
-            this.text = "Rol editado",
-             this.snackColor = "success";
+            this.text = "Usuario editado",
+            this.snackColor = "success";
           })
           .catch(err => {
             this.snackbar = true,
@@ -349,7 +361,7 @@ export default {
           .then(res => {
             this.users.push(res.data.user);
             this.snackbar = true,
-            this.text = "Rol añadido",
+            this.text = "Usuario añadido",
             this.snackColor = "success";
           })
           .catch(err => {
@@ -360,6 +372,19 @@ export default {
       }
       this.close();
     },
-  },
-};
+     checkEmail() {
+      if(/.+@.+\..+/.test(this.editedItem.email)) {
+        axios.post('api/email/verify', {'email': this.editedItem.email})
+        .then(res => {
+          this.success = res.data.messages
+          this.error = ''
+        })
+        .catch(error => {
+          this.success = '';
+          this.error = 'El correo ya existe'
+        })
+      }
+    },
+  }
+}
 </script>

@@ -15,13 +15,19 @@ class UebController extends Controller
      */
     public function index()
     {
-        return response()->json(['ueb' => Ueb::all()], 200);
-    }
+    
+        // // sumar un elemento de la base de datos 
 
-    public function show($id) 
-    {   
-        $ueb = Ueb::where('name', 'LIKE', "%$id%")->paginate();
-        return response()->json(['ueb' => $ueb], 200);
+        // $total = DB::table('uebs')
+        // ->select(DB::raw('sum(total_maquinas_riego) as total'))
+        // ->get();
+
+        // $listas = DB::table('uebs')
+        // ->select(DB::raw('sum(maquinas_listas) as listas'))
+        // ->get();
+
+        return response()->json(['ueb' => Ueb::all()], 200);
+      
     }
 
     /**
@@ -32,14 +38,10 @@ class UebController extends Controller
      */
     public function store(Request $request)
     {
-        $ueb = new Ueb();
-
-        $ueb->name = request('name');
-        $ueb->total_maquinas_riego = request('total_maquinas_riego');
-        $ueb->maquinas_listas = request('maquinas_listas');
-        $ueb->afectaciones = request('afectaciones');
-        $ueb->maquinas_rotas = request('maquinas_rotas');
-
+        $ueb = Ueb::create([
+            'name' => $request->name
+        ]);
+        
         $ueb->save();
 
         return response()->json(['ueb' => $ueb ], 200);
@@ -55,13 +57,8 @@ class UebController extends Controller
     public function update(Request $request, $id)
     {
         $ueb = Ueb::find($id);
-
         $ueb->name = request('name');
-        $ueb->total_maquinas_riego = request('total_maquinas_riego');
-        $ueb->maquinas_listas = request('maquinas_listas');
-        $ueb->afectaciones = request('afectaciones');
-        $ueb->maquinas_rotas = request('maquinas_rotas');
-
+       
         $ueb->save();
 
         return response()->json(['ueb' => $ueb], 200);

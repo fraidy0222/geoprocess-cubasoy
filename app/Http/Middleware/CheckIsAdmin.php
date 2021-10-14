@@ -3,9 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
+use \Illuminate\Support\Facades\Auth;
 
-class CheckRole
+class CheckIsAdmin
 {
     /**
      * Handle an incoming request.
@@ -16,12 +16,11 @@ class CheckRole
      */
     public function handle($request, Closure $next)
     {
-        $userRoles = Auth::user()->role->pluck('name');
-
-        if (!$userRoles->contains('Administrator')) {
-            return redirect('/');
+        if(Auth::user()->role->name === 'Administrator') {
+            return $next($request);
         }
-
-        return $next($request);
+        else {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
     }
 }
