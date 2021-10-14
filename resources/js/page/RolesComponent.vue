@@ -32,12 +32,17 @@
               <v-card-title>
                 <span class="headline">{{ formTitle }}</span>
               </v-card-title>
-              <v-card-text>
+              <v-form
+                v-model="valid"
+                @submit.stop.prevent="save"
+              >
+                  <v-card-text>
                 <v-container>
                   <v-row>
                     <v-col cols="12">
                       <v-text-field
                         v-model="editedItem.name"
+                        :rules="[rules.required]"
                         label="Rol name"
                       ></v-text-field>
                     </v-col>
@@ -47,24 +52,33 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">
+                <v-btn 
+                  color="red darken-1" 
+                  outlined
+                  @click="close">
                   Cancelar
                 </v-btn>
-                <v-btn color="blue darken-1" text @click="save">
+                <v-btn 
+                  color="primary"
+                  :disabled="!valid" 
+                  type="submit"
+                  @click.prevent="save"
+                >
                   Guardar
                 </v-btn>
               </v-card-actions>
+              </v-form>
             </v-card>
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
-            <v-card color="error" dark>
+            <v-card>
               <v-card-title class="headline"
                 >¿Estás seguro de borrar este rol?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="dark" text @click="closeDelete">Cancelar</v-btn>
-                <v-btn color="dark" text @click="deleteItemConfirm"
+                <v-btn outlined  @click="closeDelete">Cancelar</v-btn>
+                <v-btn depressed color="error" @click="deleteItemConfirm"
                   >Borrar</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -130,6 +144,7 @@
 <script>
 export default {
   data: () => ({
+    valid: true,
     search: "",
     dialog: false,
     loading: false,
@@ -138,6 +153,9 @@ export default {
     snackbar: false,
     snackColor: "",
     timeout: 2000,
+    rules: {
+      required: (v) => !!v || "Este campo es requerido",
+    },
     headers: [
       {
         text: "ID",

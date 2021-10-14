@@ -27,7 +27,13 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "docxtemplater": "^3.25.4",
+        "file-saver": "^2.0.5",
+        "nprogress": "^0.2.0",
+        "pizzip": "^3.1.1",
+        "vue-acl": "^4.1.10",
         "vue-router": "^3.1.3",
-        "vuetify": "^2.3.10"
+        "vuetify": "^2.3.10",
+        "vuex": "^3.6.2"
     }
 }

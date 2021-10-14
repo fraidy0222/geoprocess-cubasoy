@@ -9,6 +9,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 import vuetify from './vuetify';
 import router from './router';
+import store from './store';
 
 /**
  * The following block of code may be used to automatically register your
@@ -22,6 +23,7 @@ import router from './router';
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 import App from './components/AppComponent';
+import Vue from 'vue';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -30,10 +32,11 @@ import App from './components/AppComponent';
  */
 
 const app = new Vue({
-    el: '#app',
     router,
     vuetify,
+    store,
     components: {
         'App' : App
-    }
-});
+    },
+   
+}).$mount('#app')

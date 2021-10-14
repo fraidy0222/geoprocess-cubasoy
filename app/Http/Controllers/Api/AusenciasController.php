@@ -58,6 +58,7 @@ class AusenciasController extends Controller
     public function update(Request $request, $id)
     {
       $ueb = Ueb::where('name', $request->ueb)->first();
+      
       $ausencia = Ausencia::find($id);
       $ausencia->ueb()->dissociate($ueb);
       $ausencia->ueb()->associate($ueb);

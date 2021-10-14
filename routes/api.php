@@ -18,9 +18,11 @@ Route::group(['middleware' => ['auth:api'], 'namespace' => 'Api'], function () {
     Route::resource('roles', 'RoleController')->except([
         'create', 'edit'
     ]);
+
     Route::resource('user', 'UserController')->except([
         'create', 'edit', 'show'
     ]);
+    
     Route::resource('ueb', 'UebController')->except([
         'create', 'edit', 'show'
     ]);
@@ -36,7 +38,15 @@ Route::group(['middleware' => ['auth:api'], 'namespace' => 'Api'], function () {
     Route::resource('valores', 'ValoresController')->except([
         'create', 'edit', 'show'
     ]);
+    Route::resource('energias', 'EnergiaController')->except([
+        'create', 'edit', 'show'
+    ]);
+    Route::resource('maquinas', 'MaquinasController')->except([
+        'create', 'edit', 'show'
+    ]);
     Route::get('/verify', 'UserController@verify');
+    Route::post('email/verify', 'UserController@verifyEmail');
+    Route::post('user/role', 'UserController@changeRole');
 }
 );
-Route::post('login', 'Api\UserController@login')->name('login');
+Route::post('login', 'Api\UserController@login');

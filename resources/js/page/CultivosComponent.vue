@@ -54,14 +54,17 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="close">
+                  <v-btn 
+                    color="red darken-1" 
+                    outlined
+                    @click="close">
                     Cancelar
                   </v-btn>
-                  <v-btn
-                    color="blue darken-1"
-                    text
+                  <v-btn 
+                    color="primary"
+                    :disabled="!valid" 
                     type="submit"
-                    :disabled="!valid"
+                    @click.prevent="save"
                   >
                     Guardar
                   </v-btn>
@@ -70,14 +73,14 @@
             </v-form>
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="500px">
-            <v-card color="error" dark>
+            <v-card >
               <v-card-title class="headline"
                 >¿Estás seguro de borrar este cultivo?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="dark" text @click="closeDelete">Cancelar</v-btn>
-                <v-btn color="dark" text @click="deleteItemConfirm"
+                <v-btn outlined  @click="closeDelete">Cancelar</v-btn>
+                <v-btn depressed color="error" @click="deleteItemConfirm"
                   >Borrar</v-btn
                 >
                 <v-spacer></v-spacer>
