@@ -22,8 +22,8 @@ class CreateQuimicosTable extends Migration
             $table->string('tipo_aplicacion')->nullable();
             $table->string('tipo_producto')->nullable();
             $table->integer('cant')->default(0);
-            $table->time('comienza');
-            $table->time('termina');
+            $table->time('comienza')->default(0);
+            $table->time('termina')->default(0);
             $table->string('cant_equipos')->nullable();
             $table->timestamps();
             

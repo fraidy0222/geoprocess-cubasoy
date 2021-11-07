@@ -1,59 +1,80 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="12" sm="4" xs="12">
-        <v-card>
-          <v-card-text>
-            Maquinas de Riego
-          </v-card-text>
-        </v-card>
-      </v-col >
-       <v-col cols="12" sm="4" xs="12">
-        <v-card>
-          <v-card-text>Máquinas Listas</v-card-text>
+     <v-row>
+      <v-col>
+        <v-card class="mx-auto" :loading="loading">
+           <template slot="progress">
+              <v-progress-linear
+                color="primary"
+                indeterminate
+              ></v-progress-linear>
+            </template>
+          <v-list>
+            <v-list-item v-for="(t, index) in t" :key="index">
+              <v-list-item-content>
+                <v-list-item-title>Total máquinas de riego</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-icon>
+                <v-avatar color="primary">
+                  <span class="white--text text-h6">{{ t.t }}</span>
+                </v-avatar>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
-       <v-col cols="12" sm="4" xs="12">
-        <v-card>
-          <v-card-text>Máquinas Rotas</v-card-text>
+       <v-col>
+        <v-card class="mx-auto" :loading="loading">
+          <template slot="progress">
+              <v-progress-linear
+                color="primary"
+                indeterminate
+              ></v-progress-linear>
+            </template>
+          <v-list>
+            <v-list-item v-for="(l, index) in l" :key="index">
+              <v-list-item-content>
+                <v-list-item-title>Máquinas listas</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-icon>
+                <v-avatar color="primary">
+                  <span class="white--text text-h6">{{ l.l }}</span>
+                </v-avatar>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+       <v-col>
+        <v-card class="mx-auto" :loading="loading">
+          <template slot="progress">
+              <v-progress-linear
+                color="primary"
+                indeterminate
+              ></v-progress-linear>
+            </template>
+          <v-list>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Máquinas rotas</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-icon>
+                <v-avatar color="primary">
+                  <span class="white--text text-h6">{{ rowTotal('maquinas_rotas')}}</span>
+                  <!-- <span class="white--text text-h6">{{ r.maquinas_rotas }}</span> -->
+                </v-avatar>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
     </v-row>
-    <!-- <ul v-for="(count, index) in counts" :key="index">
-      <li>{{ count.total }}</li>
-    </ul>
-     <ul v-for="lista in listas" :key="lista.index">
-      <li>{{ lista.listas }}</li>
-    </ul> -->
-    <!-- <v-row>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="primary" text-color="white">
-          Máquinas de riego: {{ rowTotal("total_maquinas_riego") }}
-          <v-icon right> mdi-gauge-full </v-icon>
-        </v-chip>
-      </v-col>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="success" text-color="white">
-          Máquinas Listas: {{ rowTotal("maquinas_listas") }}
-          <v-icon right> mdi-checkbox-marked-circle </v-icon>
-        </v-chip>
-      </v-col>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="error" text-color="white">
-          Máquinas Rotas: {{ rotas("maquinas_rotas") }}
-          <v-icon right> mdi-close-circle </v-icon>
-        </v-chip>
-      </v-col>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="warning" text-color="white">
-          Fecha: {{ this.date }}
-          <v-icon right> mdi-clock </v-icon>
-        </v-chip>
-      </v-col>
-    </v-row> -->
     <v-data-table
       item-key="id"
-      class="elevation-1"
+      class="elevation-2 rounded-lg"
       :search="search"
       disable-sort
       no-results-text="No exite este elemento"
@@ -75,7 +96,7 @@
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Máquinas de Reigo</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-divider class="mx-2" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="600px" persistent>
             <template v-slot:activator="{ on, attrs }">
@@ -111,6 +132,8 @@
                           label="Máquinas de Riego"
                           required
                           :rules="Rules"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" md="6" >
@@ -119,6 +142,8 @@
                           label="Máquinas listas"
                           required
                           :rules="Rules"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" md="6" >
@@ -138,7 +163,7 @@
                           chips
                           clearable
                           multiple
-                          item-text="name"
+                          return-object
                           label="Máquinas rotas"
                           append-icon="mdi-chevron-down"
                         >
@@ -272,8 +297,9 @@ export default {
     timeout: 2000,
     options: [],
     modal: false,
-    counts: [],
-    listas: [],
+    t: [],
+    l: [],
+    r: [],
     ueb: [],
     date: new Date().toISOString().substr(0, 10),
     headers: [
@@ -307,6 +333,7 @@ export default {
       total_maquinas_riego: "",
       maquinas_listas: "",
       maquinas_rotas: "",
+      afectaciones: ""
     },
   }),
   computed: {
@@ -359,7 +386,11 @@ export default {
         .get("api/maquinas", {})
         .then((res) => {
           this.maquinas = res.data.maquina;
-          this.ueb = res.data.uebs
+          this.ueb = res.data.uebs,
+          this.t = res.data.total,
+          this.l = res.data.listas,
+          this.r = res.data.rotas
+          console.log(res.data.rotas)
         })
         .catch((err) => {
           if (err.response.status == 401) {
@@ -436,6 +467,7 @@ export default {
           .post("api/maquinas", this.editedItem)
           .then((res) => {
             this.maquinas.push(res.data.maquina);
+            this.initialize()
             this.snackbar = true,
             this.text = "Maquina de riego añadida",
             this.snackColor = "success";
@@ -453,11 +485,16 @@ export default {
         this.options.push(`${index}`);
       }
     },
+     rowTotal(base) {
+      return this.maquinas.reduce((sum, cur) => (sum += cur[base].length), 0);
+    },
     loadFile(url, callback) {
       PizZipUtils.getBinaryContent(url, callback);
     },
-    renderDoc() {
+    renderDoc(base) {
       let maquina = this.maquinas;
+      let t = this.t;
+      let l = this.l;
       this.loadFile("/documentos/maquinas.docx", function(
         error,
         content
@@ -467,7 +504,8 @@ export default {
         }
         const zip = new PizZip(content);
         const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
-        doc.setData({ maquina });
+        doc.setData({ maquina, t, l});
+        console.log(doc)
         try {
           // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
           doc.render();

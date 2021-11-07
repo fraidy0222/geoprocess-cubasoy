@@ -13,4 +13,7 @@ class Cultivo extends Model
     public function ventas_diarias () {
         return $this->hasMany(Valores::class);
     }
+    public function siembra () {
+        return $this->hasMany(Siembra::class);
+    }
 }

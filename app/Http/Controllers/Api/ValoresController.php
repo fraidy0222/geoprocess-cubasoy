@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ValoresResource;
 use App\Valores;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ValoresController extends Controller
 {
@@ -17,7 +18,15 @@ class ValoresController extends Controller
      */
     public function index()
     {
-        return response()->json(['valores' => ValoresResource::collection(Valores::all()), 'cultivos' => Cultivo::pluck('name')->all()],200);
+        $count = DB::table('valores')
+        ->select(DB::raw('sum(venta_mes_cup) as diaria, sum(acumulado) as acumu'))
+        ->get();
+
+        return response()->json([
+            'valores' => ValoresResource::collection(Valores::all()), 
+            'cultivos' => Cultivo::pluck('name')->all(),
+            'count' => $count
+        ],200);
     }
 
 

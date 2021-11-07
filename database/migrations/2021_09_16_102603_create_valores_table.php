@@ -17,8 +17,8 @@ class CreateValoresTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('cultivo_id')->nullable();
             $table->float('venta_diaria_cup')->nullable(0);
-            $table->float('venta_mes_cup')->nullable(0);
-            $table->float('acumulado')->nullable();
+            $table->float('venta_mes_cup', 8, 2)->nullable(0);
+            $table->float('acumulado', 8, 2)->nullable();
             $table->timestamps();
 
             $table->foreign('cultivo_id')->references('id')->on('cultivos')->onDelete('cascade');

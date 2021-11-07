@@ -1,9 +1,5 @@
 <template>
   <div>
-    <v-chip class="ma-2" color="warning" text-color="white">
-      Fecha: {{ this.date }}
-      <v-icon right> mdi-clock </v-icon>
-    </v-chip>
     <v-data-table
       item-key="id"
       class="elevation-1"
@@ -122,7 +118,7 @@
         </v-tooltip>
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize"> Reset </v-btn>
+        <v-btn color="primary" @click="initialize"> Reiniciar </v-btn>
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
@@ -155,7 +151,6 @@ export default {
     snackColor: "",
     timeout: 2000,
     valid: true,
-    date: new Date().toISOString().substr(0, 10),
     headers: [
       {
         text: "ID",

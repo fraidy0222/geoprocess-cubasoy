@@ -1,9 +1,5 @@
 <template>
   <div>
-    <v-chip class="ma-2" color="warning" text-color="white">
-      Fecha: {{ this.date }}
-      <v-icon right> mdi-clock </v-icon>
-    </v-chip>
     <v-data-table
       item-key="id"
       class="elevation-1"
@@ -20,6 +16,61 @@
         'items-per-page-text': 'Ausencias por páginas',
       }"
     >
+      <template v-slot:body="{ items }">
+        <tbody>
+          <tr v-for="item in items" :key="item.id">
+            <td>{{ item.ueb }}</td>
+            <td>{{ item.certificados_medicos }}</td>
+            <td>{{ item.lic_maternidad }}</td>
+            <td>{{ item.otras }}</td>
+            <td>{{ item.vacaciones }}</td>
+            <td>{{ item.aus_autorizadas }}</td>
+            <td>{{ item.aus_injustificadas }}</td>
+            <td>{{ item.aislados }}</td>
+            <td>{{ item.positivos }}</td>
+            <td>{{ item.madres_ninnos }}</td>
+            <td>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn v-bind="attrs" v-on="on" icon>
+                    <v-icon
+                      color="warning"
+                      class="mr-2"
+                      @click="editItem(item)"
+                    >
+                      mdi-pencil
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <span>Editar</span>
+              </v-tooltip>
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn v-bind="attrs" v-on="on" icon>
+                    <v-icon color="error" @click="deleteItem(item)">
+                      mdi-delete
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <span>Eliminar</span>
+              </v-tooltip>
+            </td>
+          </tr>
+          <tr v-for="item in count" :key="item.id">
+            <td class="font-weight-black">SUB - Total</td>
+            <td class="font-weight-black">{{ item.certificados }}</td>
+            <td class="font-weight-black">{{ item.otros }}</td>
+            <td class="font-weight-black">{{ item.maternidad }}</td>
+            <td class="font-weight-black">{{ item.vacaciones }}</td>
+            <td class="font-weight-black">{{ item.auto }}</td>
+            <td class="font-weight-black">{{ item.inju }}</td>
+            <td class="font-weight-black">{{ item.aislados }}</td>
+            <td class="font-weight-black">{{ item.posi }}</td>
+            <td class="font-weight-black">{{ item.madre }}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </template>
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Ausencias</v-toolbar-title>
@@ -30,6 +81,9 @@
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
                 <v-icon>mdi-plus</v-icon>
                 Añadir
+              </v-btn>
+              <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
+                Exportar a Word
               </v-btn>
             </template>
             <v-card>
@@ -45,6 +99,8 @@
                           v-model="editedItem.certificados_medicos"
                           label="Certificados médicos"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -52,6 +108,8 @@
                           v-model="editedItem.lic_maternidad"
                           label="Licencia de maternidad"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -59,6 +117,8 @@
                           v-model="editedItem.vacaciones"
                           label="Vacaciones"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -66,6 +126,8 @@
                           v-model="editedItem.aus_autorizadas"
                           label="Ausencias autorizadas"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -73,6 +135,8 @@
                           v-model="editedItem.aus_injustificadas"
                           label="Ausencias injustificadas"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -80,6 +144,8 @@
                           v-model="editedItem.otras"
                           label="Otros"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -87,6 +153,8 @@
                           v-model="editedItem.aislados"
                           label="Aislados"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -94,6 +162,8 @@
                           v-model="editedItem.positivos"
                           label="Positivos"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -101,6 +171,8 @@
                           v-model="editedItem.madres_ninnos"
                           label="Madres con niños"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -119,15 +191,12 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn 
-                    color="red darken-1" 
-                    outlined
-                    @click="close">
+                  <v-btn color="red darken-1" outlined @click="close">
                     Cancelar
                   </v-btn>
-                  <v-btn 
+                  <v-btn
                     color="primary"
-                    :disabled="!valid" 
+                    :disabled="!valid"
                     type="submit"
                     @click.prevent="save"
                   >
@@ -144,7 +213,7 @@
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn outlined  @click="closeDelete">Cancelar</v-btn>
+                <v-btn outlined @click="closeDelete">Cancelar</v-btn>
                 <v-btn depressed color="error" @click="deleteItemConfirm"
                   >Borrar</v-btn
                 >
@@ -163,28 +232,6 @@
           class="mx-4"
         ></v-text-field>
         <!-- end Buscar -->
-      </template>
-      <template v-slot:[`item.actions`]="{ item }">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" icon>
-              <v-icon color="warning" class="mr-2" @click="editItem(item)">
-                mdi-pencil
-              </v-icon>
-            </v-btn>
-          </template>
-          <span>Editar</span>
-        </v-tooltip>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" icon>
-              <v-icon color="error" @click="deleteItem(item)">
-                mdi-delete
-              </v-icon>
-            </v-btn>
-          </template>
-          <span>Eliminar</span>
-        </v-tooltip>
       </template>
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize"> Reiniciar </v-btn>
@@ -209,13 +256,14 @@
 </template>
 
 <script>
+// docxtemplater
+import Docxtemplater from "docxtemplater";
+import PizZip from "pizzip";
+import PizZipUtils from "pizzip/utils/index.js";
+
+import { saveAs } from "file-saver";
+
 export default {
-  props: {
-    number: {
-      type: Number,
-      default: 2 
-    }
-  },
   data: () => ({
     search: "",
     dialog: false,
@@ -226,8 +274,9 @@ export default {
     snackColor: "",
     timeout: 2000,
     ueb: [],
+    count: [],
+    total: [],
     valid: true,
-    date: new Date().toISOString().substr(0, 10),
     rules: {
       required: (v) => !!v || "Este campo es requerido",
     },
@@ -326,6 +375,10 @@ export default {
         .then((res) => {
           this.ausencias = res.data.ausencias;
           this.ueb = res.data.uebs;
+          this.count = res.data.count;
+          this.total = res.data.total;
+          console.log(res.data.count)
+          console.log(res.data.total)
         })
         .catch((err) => console.log(err));
     },
@@ -345,16 +398,17 @@ export default {
     deleteItemConfirm() {
       axios
         .delete("api/ausencias/" + this.editedItem.id)
-        .then(res => {
+        .then((res) => {
           this.ausencias.splice(this.editedIndex, 1);
-          this.snackbar = true,
-          this.text = "Ausencia eliminada",
-          this.snackColor = "success";
+          (this.snackbar = true),
+          (this.text = "Ausencia eliminada"),
+          (this.snackColor = "success");
+          this.initialize();
         })
-        .catch(err => {
-          this.snackbar = true,
-          this.text = "Ha occurido un error",
-          this.snackColor = "error";
+        .catch((err) => {
+          (this.snackbar = true),
+          (this.text = "Ha occurido un error"),
+          (this.snackColor = "error");
         });
       this.closeDelete();
     },
@@ -381,31 +435,89 @@ export default {
           .put("api/ausencias/" + this.editedItem.id, this.editedItem)
           .then((res) => {
             this.initialize();
-            this.snackbar = true,
-            this.text = "Ausencia editada",
-            this.snackColor = "success";
+            (this.snackbar = true),
+            (this.text = "Ausencia editada"),
+            (this.snackColor = "success");
           })
           .catch((err) => {
-            this.snackbar = true,
-            this.text = "Ha occurido un error",
-            this.snackColor = "error";
+            (this.snackbar = true),
+            (this.text = "Ha occurido un error"),
+            (this.snackColor = "error");
           });
       } else {
         axios
           .post("api/ausencias", this.editedItem)
           .then((res) => {
             this.ausencias.push(res.data.ausencias);
-            this.snackbar = true,
-            this.text = "Ausencia añadida",
-            this.snackColor = "success";
+            this.initialize();
+            (this.snackbar = true),
+              (this.text = "Ausencia añadida"),
+              (this.snackColor = "success");
           })
-          .catch(err => {
-            this.snackbar = true,
-            this.text = "Ha occurido un error",
-            this.snackColor = "error";
+          .catch((err) => {
+            (this.snackbar = true),
+              (this.text = "Ha occurido un error"),
+              (this.snackColor = "error");
           });
       }
       this.close();
+    },
+    loadFile(url, callback) {
+      PizZipUtils.getBinaryContent(url, callback);
+    },
+    renderDoc() {
+      let a = this.ausencias;
+      let c = this.count;
+      let t = this.total;
+      this.loadFile("/documentos/ausencias.docx", function (error, content) {
+        if (error) {
+          throw error;
+        }
+        const zip = new PizZip(content);
+        const doc = new Docxtemplater(zip, {
+          paragraphLoop: false,
+          linebreaks: false,
+        });
+        doc.setData({ a, c, t });
+        console.log(doc)
+        try {
+          doc.render();
+        } catch (error) {
+          function replaceErrors(key, value) {
+            if (value instanceof Error) {
+              return Object.getOwnPropertyNames(value).reduce(function (
+                error,
+                key
+              ) {
+                error[key] = value[key];
+                return error;
+              },
+              {});
+            }
+            return value;
+          }
+          console.log(JSON.stringify({ error: error }, replaceErrors));
+
+          if (error.properties && error.properties.errors instanceof Array) {
+            const errorMessages = error.properties.errors
+              .map(function (error) {
+                return error.properties.explanation;
+              })
+              .join("\n");
+            console.log("errorMessages", errorMessages);
+            // errorMessages is a humanly readable message looking like this :
+            // 'The tag beginning with "foobar" is unopened'
+          }
+          throw error;
+        }
+        const out = doc.getZip().generate({
+          type: "blob",
+          mimeType:
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+        // Output the document using Data-URI
+        saveAs(out, "ausencias.docx");
+      });
     },
   },
 };

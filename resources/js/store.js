@@ -5,8 +5,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     getters: {
-      Admin: state => {
-        return state.user ? state.user.Admin : true;
+      Admin: (state) => {
+        return state.user ? state.user.Admin : false;
       }
     }
 });

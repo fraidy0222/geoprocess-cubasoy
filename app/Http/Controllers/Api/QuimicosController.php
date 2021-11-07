@@ -8,6 +8,7 @@ use App\Quimico;
 use App\Ueb;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class QuimicosController extends Controller
 {
@@ -18,7 +19,23 @@ class QuimicosController extends Controller
      */
     public function index()
     {
-       return response()->json(['quimicos' => QuimicosResource::collection(Quimico::all()), 'uebs' => Ueb::pluck('name')->all()], 200);
+        $cc= DB::table('quimicos')
+        ->select(DB::raw('count(cc) as cc'))
+        ->get();
+        $area_aplicada= DB::table('quimicos')
+        ->select(DB::raw('sum(area_aplicada) as a'))
+        ->get();
+        $area_acum= DB::table('quimicos')
+        ->select(DB::raw('sum(area_acum) as c'))
+        ->get();
+        
+       return response()->json([
+           'quimicos' => QuimicosResource::collection(Quimico::all()), 
+           'uebs' => Ueb::pluck('name')->all(),
+           'cc' => $cc,
+           'area_aplicada' => $area_aplicada,
+           'area_acum' => $area_acum
+        ], 200);
     }
 
    

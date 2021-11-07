@@ -30,5 +30,9 @@ class Ueb extends Model
     {
         return $this->hasMany(Maquinas::class);
     }
+    public function siembra() 
+    {
+        return $this->hasMany(Siembra::class);
+    }
 }
 

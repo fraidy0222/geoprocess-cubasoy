@@ -19,7 +19,7 @@ class CreateMaquinasTable extends Migration
             $table->integer('total_maquinas_riego');
             $table->integer('maquinas_listas');
             $table->string('afectaciones', 255);
-            $table->json('maquinas_rotas')->default(0);
+            $table->json('maquinas_rotas');
             $table->timestamps();
 
             $table->foreign('ueb_id')->references('id')->on('uebs')->onDelete('cascade');

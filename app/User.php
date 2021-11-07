@@ -35,16 +35,11 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'is_admin' => 'boolean',
     ];
 
    public function role() 
    {
      return $this->belongsTo(Role::class);
-   }
-
-   public function Admin () {
-      return $this->is_admin;
    }
 
    public function isAdmin()
@@ -55,10 +50,5 @@ class User extends Authenticatable
    public function editor()
    {
      return strtolower($this->role->name) === 'editor';
-   }
-
-   public function invitado()
-   {
-      return strtolower($this->role->name) === 'invitado';
    }
 }
