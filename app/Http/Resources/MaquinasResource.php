@@ -20,7 +20,9 @@ class MaquinasResource extends JsonResource
             'total_maquinas_riego' => $this->total_maquinas_riego,
             'maquinas_listas' => $this->maquinas_listas,
             'maquinas_rotas' => $this->maquinas_rotas,
-            'afectaciones' => $this->afectaciones
+            'afectaciones' => $this->afectaciones,
+            'comienza' => $this->comienza->format('H-s'),
+            'termina' => $this->termina,
         ];
     }
 }

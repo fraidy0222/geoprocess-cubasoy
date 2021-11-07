@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AusenciasResource;
 use App\Ueb;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AusenciasController extends Controller
 {
@@ -17,7 +18,56 @@ class AusenciasController extends Controller
      */
     public function index()
     {
-      return response()->json(['ausencias' => AusenciasResource::collection(Ausencia::all()), 'uebs' => Ueb::pluck('name')->all()], 200);
+      $count = DB::table('ausencias')
+      ->select( DB::raw('
+      sum(certificados_medicos) as certificados, 
+      sum(otras) as otros, 
+      sum(lic_maternidad) as maternidad, 
+      sum(vacaciones) as vacaciones,
+      sum(aus_autorizadas) as auto,
+      sum(aus_injustificadas) as inju,
+      sum(aislados) as aislados,
+      sum(positivos) as posi,
+      sum(madres_ninnos) as madre
+      '),  
+      DB::raw(
+        'SUM(certificados_medicos + 
+        otras + 
+        lic_maternidad + 
+        vacaciones + 
+        aus_autorizadas + 
+        aus_injustificadas +
+        aislados +
+        positivos +
+        madres_ninnos
+        ) 
+      as total'))  
+      ->get();
+    
+      $total = DB::table('ausencias')
+      ->select(
+        DB::raw(
+          'SUM(certificados_medicos + 
+          otras + 
+          lic_maternidad + 
+          vacaciones + 
+          aus_autorizadas + 
+          aus_injustificadas +
+          aislados +
+          positivos +
+          madres_ninnos
+          ) 
+        as total'))
+      ->groupBy('id')
+      ->get();
+
+      return response()->json([
+        'ausencias' => AusenciasResource::collection(Ausencia::all()), 
+        'uebs' => Ueb::pluck('name')->all(),
+        'count' => $count,
+        'total' => $total 
+      ], 200);
+
     }
    
     /**

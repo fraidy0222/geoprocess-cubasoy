@@ -10,7 +10,8 @@ class Maquinas extends Model
         'total_maquinas_riego',
         'maquinas_listas',
         'afectaciones',
-        'ueb_id'
+        'ueb_id',
+        
     ];
 
     protected $casts = [

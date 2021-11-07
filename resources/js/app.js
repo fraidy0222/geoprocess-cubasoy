@@ -7,9 +7,10 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import Vue from 'vue';
 import vuetify from './vuetify';
 import router from './router';
-import store from './store';
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -23,7 +24,7 @@ import store from './store';
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 import App from './components/AppComponent';
-import Vue from 'vue';
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -34,7 +35,6 @@ import Vue from 'vue';
 const app = new Vue({
     router,
     vuetify,
-    store,
     components: {
         'App' : App
     },

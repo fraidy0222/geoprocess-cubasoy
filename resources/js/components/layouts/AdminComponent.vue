@@ -5,7 +5,7 @@
       :clipped="$vuetify.breakpoint.lgAndUp"
       app
     >
-      <v-list-group :value="true" v-if="Admin">
+      <v-list-group :value="true">
         <template v-slot:activator>
           <v-list-item-title>Seguridad</v-list-item-title>
         </template>
@@ -27,7 +27,7 @@
         </v-list-item-group>
       </v-list-group>
 
-      <v-list-group :value="true" v-if="Admin">
+      <v-list-group :value="true">
         <template v-slot:activator>
           <v-list-item-title>Administración</v-list-item-title>
         </template>
@@ -50,7 +50,7 @@
         </v-list-item-group>
       </v-list-group>
 
-      <v-list-group>
+      <v-list-group :value="true">
         <template v-slot:activator>
           <v-list-item-title>Gestión</v-list-item-title>
         </template>
@@ -72,8 +72,6 @@
           </v-list-item>
         </v-list-item-group>
       </v-list-group>
-
-
     </v-navigation-drawer>
 
     <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app>
@@ -82,28 +80,25 @@
         <span>Goeprocess</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-        <v-tooltip bottom>
+      <v-menu transition="scale-transition"  offset-y  min-width="200px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn 
-          icon 
-          @click="toggle_dark_mode"
-          v-on="on"
-          v-bind="attrs"
-          >
-        <v-icon>mdi-brightness-4</v-icon>
-      </v-btn>
-        </template>
-        <span>Cambiar Tema</span>
-      </v-tooltip>
-      
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" icon @click="logout">
-            <v-icon>mdi-logout</v-icon>
+          <v-btn icon v-bind="attrs" v-on="on">
+            <v-icon>mdi-cog-outline</v-icon>
           </v-btn>
         </template>
-        <span>Cerrar Sesión</span>
-      </v-tooltip>
+        <v-card>
+          <v-list-item-content class="justify-center">
+            <div class="mx-auto text-center">
+              <v-btn text @click="toggle_dark_mode"><v-icon class="mr-2">mdi-brightness-4</v-icon> Cambiar Tema</v-btn>
+            </div>
+          </v-list-item-content>
+          <v-list-item-content>
+           <div class="mx-auto text-center">
+              <v-btn text class="mb-5" @click="logout"><v-icon>mdi-logout</v-icon>Cerrar Sesión</v-btn>
+            </div>
+          </v-list-item-content>
+        </v-card>
+      </v-menu>
     </v-app-bar>
     <v-main>
       <v-container fluid>
@@ -114,8 +109,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
   data: () => ({
     drawer: null,
@@ -125,10 +118,14 @@ export default {
       { text: "Reporte General", icon: "mdi-clipboard-text-outline" },
     ],
     gestion: [
-      { text: "Máquinas de Riego", icon: "mdi-watering-can-outline", action:'/maquinas_riego' },
-      { text: "Siembra (Me falta algunas cosas)", icon: "mdi-upload" },
       {
-        text: "Químicos(Falta)",
+        text: "Máquinas de Riego (OK)",
+        icon: "mdi-watering-can-outline",
+        action: "/maquinas_riego",
+      },
+      { text: "Siembra (OK)", icon: "mdi-tractor", action:'/siembra' },
+      {
+        text: "Químicos(OK)",
         icon: "mdi-flask-empty-outline",
         action: "/quimicos",
       },
@@ -140,11 +137,16 @@ export default {
       {
         text: "Valores (OK)",
         icon: "mdi-cash-usd-outline",
-        action: "/valores",
+        action: "/diaria_acumuladas_por_valores",
+      },
+       {
+        text: "Toneladas",
+        icon: "mdi-scale",
+        action: "/diaria_acumuladas_por_toneladas",
       },
       {
-        text: "Energía y Combustible",
-        icon: "mdi-corn",
+        text: "Energía-Combustible",
+        icon: "mdi-fuel",
         action: "/energia_combustible",
       },
     ],
@@ -176,10 +178,6 @@ export default {
       this.$vuetify.theme.dark = true;
       localStorage.setItem("dark_theme", this.$vuetify.theme.dark.toString);
     }
-  },
-
-  computed: {
-    ...mapGetters(['Admin'])
   },
 
   methods: {

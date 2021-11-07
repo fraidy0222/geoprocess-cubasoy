@@ -7,6 +7,7 @@ use App\Http\Resources\MaquinasResource;
 use App\Maquinas;
 use App\Ueb;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MaquinasController extends Controller
 {
@@ -17,23 +18,26 @@ class MaquinasController extends Controller
      */
     public function index()
     {
-        // // sumar un elemento de la base de datos 
-        // $total = DB::table('maquinas')
-        // ->select(DB::raw('sum(total_maquinas_riego) as total'))
-        // ->get();
+        $total= DB::table('maquinas')
+        ->select(DB::raw('sum(total_maquinas_riego) as t'))
+        ->get();
+        $listas= DB::table('maquinas')
+        ->select(DB::raw('sum(maquinas_listas) as l'))
+        ->get();
+        $rotas= DB::table('maquinas')
+        ->select('maquinas_rotas')
+        ->orderBy('id')
+        ->get();
 
-        // $listas = DB::table('maquinas')
-        // ->select(DB::raw('sum(maquinas_listas) as listas'))
-        // ->get();
-        return response()->json(['maquina' => MaquinasResource::collection(Maquinas::all()), 'uebs' => Ueb::pluck('name')->all() ], 200);
+        return response()->json([
+            'maquina' => MaquinasResource::collection(Maquinas::all()), 
+            'uebs' => Ueb::pluck('name')->all(),
+            'total' => $total,
+            'listas' => $listas,
+            'rotas' => $rotas, 
+        ], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $ueb = Ueb::where('name', $request->ueb)->first();
@@ -43,6 +47,7 @@ class MaquinasController extends Controller
             $maquina->maquinas_listas = request('maquinas_listas');
             $maquina->afectaciones = request('afectaciones');
             $maquina->maquinas_rotas = request('maquinas_rotas');
+
         $maquina->ueb()->associate($ueb);
 
         $maquina->save();

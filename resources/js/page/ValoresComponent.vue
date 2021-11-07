@@ -1,20 +1,49 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="primary" text-color="white">
-        VENTAS DIARIAS EN CUP: {{ rowTotal("venta_diaria_cup") }}
-        </v-chip>
+     <v-row>
+      <v-col>
+        <v-card class="mx-auto" :loading="loading">
+          <template slot="progress">
+            <v-progress-linear
+              indeterminate
+              color="primary"
+            ></v-progress-linear>
+          </template>
+
+          <v-list>
+            <v-list-item v-for="(c, index) in c" :key="index">
+              <v-list-item-content>
+                <v-list-item-title class="text-">Ventas Diarias en CUP</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-icon>
+                <v-chip class="ma-2">{{ c.diaria }}</v-chip>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list>
+        </v-card>
       </v-col>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="success" text-color="white">
-          VENTAS MES EN CUP: {{ rowTotal("venta_mes_cup") }}
-        </v-chip>
-      </v-col>
-      <v-col cols="12" sm="3">
-        <v-chip class="ma-2" color="error" text-color="white">
-          ACUMULADO: {{ rowTotal("acumulado") }}
-        </v-chip>
+      <v-col>
+        <v-card class="mx-auto" :loading="loading">
+          <template slot="progress">
+            <v-progress-linear
+              indeterminate
+              color="primary"
+            ></v-progress-linear>
+          </template>
+
+          <v-list>
+            <v-list-item v-for="(c, index) in c" :key="index">
+              <v-list-item-content>
+                <v-list-item-title class="text-">Ventas Diarias en CUP</v-list-item-title>
+              </v-list-item-content>
+
+              <v-list-item-icon>
+                <v-chip class="ma-2">{{ c.acumu }}</v-chip>
+              </v-list-item-icon>
+            </v-list-item>
+          </v-list>
+        </v-card>
       </v-col>
     </v-row>
     <v-data-table
@@ -61,6 +90,8 @@
                           v-model="editedItem.venta_diaria_cup"
                           label="Ventas diarias en cup"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -68,6 +99,8 @@
                           v-model="editedItem.venta_mes_cup"
                           label="Ventas del mes en cup"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -75,6 +108,8 @@
                           v-model="editedItem.acumulado"
                           label="Acumulado hasta la fecha"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -83,6 +118,8 @@
                           v-model="editedItem.cultivo"
                           label="Selecione un cultivo"
                           :rules="[rules.required]"
+                          type="number"
+                          min="0"
                           no-data-text="No hay elementos"
                           append-icon="mdi-chevron-down"
                         ></v-select>
@@ -206,6 +243,8 @@ export default {
     timeout: 2000,
     cultivos: [],
     valid: true,
+    c: [],
+    acumu: [],
     date: new Date().toISOString().substr(0, 10),
     rules: {
       required: (v) => !!v || "Este campo es requerido",
@@ -288,7 +327,8 @@ export default {
         .then((res) => {
           this.valores = res.data.valores;
           this.cultivos = res.data.cultivos;
-          console.log(res.data.cultivos)
+          this.c = res.data.count;
+          console.log(res.data.count)
         })
         .catch((err) => console.log(err));
     },
@@ -313,6 +353,7 @@ export default {
           this.snackbar = true,
           this.text = "Valores eliminada",
           this.snackColor = "success";
+          this.initialize()
         })
         .catch(err => {
           this.snackbar = true,
@@ -347,6 +388,7 @@ export default {
             this.snackbar = true,
             this.text = "Valores editada",
             this.snackColor = "success";
+            this.initialize()
           })
           .catch((err) => {
             this.snackbar = true,
@@ -361,6 +403,7 @@ export default {
             this.snackbar = true,
             this.text = "Valores añadida",
             this.snackColor = "success";
+            this.initialize()
           })
           .catch(err => {
             this.snackbar = true,
@@ -369,9 +412,6 @@ export default {
           });
       }
       this.close();
-    },
-     rowTotal(base) {
-      return this.valores.reduce((sum, cur) => (sum += cur[base]), 0);
     },
     loadFile(url, callback) {
       PizZipUtils.getBinaryContent(url, callback);

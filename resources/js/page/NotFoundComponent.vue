@@ -2,7 +2,7 @@
   <v-row justify="center" align="center">
     <v-col cols="12" sm="6">
       <v-img
-        :src="require('../../assets/notFound.svg')"
+        :src="require('../../assets/img/notFound.svg')"
         max-width="700"
         max-height="500"
       >

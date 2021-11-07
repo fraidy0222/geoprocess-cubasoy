@@ -52,22 +52,27 @@
                           :error-messages="error"
                           @blur="checkEmail"
                           :rules="[rules.required, rules.email]"
+                          hint="ejemplo.@ejemplo.com"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
                           v-model="editedItem.password"
                           label="Contraseña"
-                          type="password"
                           :rules="[rules.required]"
+                          :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                          @click:append="show = !show"
+                          :type="show ? 'text' : 'password'"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
                           v-model="editedItem.repite_password"
                           label="Repita la contraseña"
-                          type="password"
                           :rules="[rules.required, passwordMatch]"
+                          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                          @click:append="show1 = !show1"
+                          :type="show1 ? 'text' : 'password'"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12">
@@ -171,11 +176,13 @@
           <v-icon>mdi-close-circle</v-icon>
         </v-btn>
       </template>
-    </v-snackbar>
+    </v-snackbar>  
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   data: () => ({
     state: {
@@ -192,7 +199,8 @@ export default {
     success: '',
     error: '',
     roles: [],
-    test: [],
+    show: false,
+    show1: false,
     rules: {
       required: (v) => !!v || "Este campo es requerido",
       email: (v) => /.+@.+\..+/.test(v) || "El correo debe ser válido",
@@ -245,6 +253,7 @@ export default {
         ? "Las contraseñas no coinciden"
         : true;
     },
+    ...mapGetters(['Admin']),
   },
 
   watch: {
@@ -289,6 +298,7 @@ export default {
         .then((res) => {
           this.users = res.data.user;
           this.roles = res.data.roles;
+          console.log(res.data.user)
         })
         .catch((err) => console.log(err));
     },

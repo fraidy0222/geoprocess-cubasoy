@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckIsAdmin;
 use Illuminate\Http\Request;
 
 /*
@@ -42,6 +43,9 @@ Route::group(['middleware' => ['auth:api'], 'namespace' => 'Api'], function () {
         'create', 'edit', 'show'
     ]);
     Route::resource('maquinas', 'MaquinasController')->except([
+        'create', 'edit', 'show'
+    ]);
+    Route::resource('siembra', 'SiembraController')->except([
         'create', 'edit', 'show'
     ]);
     Route::get('/verify', 'UserController@verify');

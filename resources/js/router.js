@@ -15,33 +15,12 @@ const Valores = () => import('./page/ValoresComponent');
 const NotFound = () => import('./page/NotFoundComponent');
 const Energia = () => import('./page/EnergiaComponent');
 const Maquinas = () => import('./page/MaquinasComponent');
+const Siembra = () => import('./page/SiembraComponent');
 
 import NProgress from 'nprogress/nprogress.js';
 import 'nprogress/nprogress.css';
-import store from './store';
-
-import { AclInstaller, AclCreate, AclRule } from 'vue-acl';
 
 Vue.use(VueRouter)
-
-// export default new AclCreate({
-//   initial: 'public',
-//   notfound: {
-//     path: '/error',
-//     forwardQueryParams: true,
-//   },
-//   router,
-//   acceptLocalRules: true,
-//   globalRules: {
-//     isAdmin: new AclRule('admin').generate(),
-//     isPublic: new AclRule('public').or('admin').generate(),
-//     isLogged: new AclRule('user').and('inside').generate()
-//   },
-//   middleware: async acl => {
-//     await timeout(2000) // call your api
-//     acl.change('admin')
-//   }
-// })
 
 function verify(to, from, next) {
   axios.get('api/verify')
@@ -68,10 +47,6 @@ const routes = [
     path: '/test',
     component: Test,
     name: 'Test',
-    meta: {
-      adminAuth: false,
-      rule: 'isPublic'
-    },
     beforeEnter: verify,
   },   
   {
@@ -82,10 +57,6 @@ const routes = [
         path: '/users',
         component: User,
         name: 'User',
-        // beforeEnter: (to, from, next) => {
-        //   if(store.getters["Admin"]) next();
-        //   else next('/');
-        // }
       },
       {
         path: '/roles',
@@ -123,7 +94,7 @@ const routes = [
         
       },
       {
-        path: '/valores',
+        path: '/diaria_acumuladas_por_valores',
         component: Valores,
         name: 'Valores',
         
@@ -132,17 +103,16 @@ const routes = [
         path: '/energia_combustible',
         component: Energia,
         name: 'Energia', 
+      },
+      {
+        path: '/siembra',
+        component: Siembra,
+        name: 'Siembra', 
       }
     ],
-    meta: {
-      requiresAuth: true,
-      rule: new AclRule('admin').generate()
-    }, 
     beforeEnter: verify,
   },
 ]
-
-Vue.config.productionTip = false;
 
 const router = new VueRouter({mode: 'history', routes })
 
@@ -158,13 +128,10 @@ router.beforeResolve((to, from, next) => {
   }
   next()
 })
+NProgress.configure({ showSpinner: false })
 
 router.afterEach(() => {
   NProgress.done()
 })
 
-router.beforeEach((to, from, next) => {
-  if(store.getters["Admin"]) next();
-  else next('/');
-})
 export default router
