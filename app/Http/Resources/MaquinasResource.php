@@ -21,7 +21,7 @@ class MaquinasResource extends JsonResource
             'maquinas_listas' => $this->maquinas_listas,
             'maquinas_rotas' => $this->maquinas_rotas,
             'afectaciones' => $this->afectaciones,
-            'comienza' => $this->comienza->format('H-s'),
+            'comienza' => $this->comienza,
             'termina' => $this->termina,
         ];
     }

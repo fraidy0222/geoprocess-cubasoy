@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'type'
     ];
 
     /**
@@ -42,13 +42,13 @@ class User extends Authenticatable
      return $this->belongsTo(Role::class);
    }
 
-   public function isAdmin()
-   {
-      return strtolower($this->role->name) === 'administrator';
-   }
+  //  public function isAdmin()
+  //  {
+  //     return strtolower($this->role->name) === 'administrator';
+  //  }
 
-   public function editor()
-   {
-     return strtolower($this->role->name) === 'editor';
-   }
+  //  public function editor()
+  //  {
+  //    return strtolower($this->role->name) === 'editor';
+  //  }
 }

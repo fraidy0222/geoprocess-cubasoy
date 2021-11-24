@@ -77,10 +77,12 @@
     <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        <span>Goeprocess</span>
+        <router-link :to="{ name: 'home' }" class="nombre"
+          >GeoProcess</router-link
+        >
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-menu transition="scale-transition"  offset-y  min-width="200px">
+      <v-menu transition="scale-transition" offset-y min-width="200px">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
             <v-icon>mdi-cog-outline</v-icon>
@@ -89,12 +91,17 @@
         <v-card>
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
-              <v-btn text @click="toggle_dark_mode"><v-icon class="mr-2">mdi-brightness-4</v-icon> Cambiar Tema</v-btn>
+              <v-btn text @click="toggle_dark_mode"
+                ><v-icon class="mr-2">mdi-brightness-4</v-icon> Cambiar
+                Tema</v-btn
+              >
             </div>
           </v-list-item-content>
           <v-list-item-content>
-           <div class="mx-auto text-center">
-              <v-btn text class="mb-5" @click="logout"><v-icon>mdi-logout</v-icon>Cerrar Sesión</v-btn>
+            <div class="mx-auto text-center">
+              <v-btn text class="mb-5" @click="logout"
+                ><v-icon>mdi-logout</v-icon>Cerrar Sesión</v-btn
+              >
             </div>
           </v-list-item-content>
         </v-card>
@@ -108,58 +115,64 @@
   </div>
 </template>
 
+<style scoped>
+.nombre {
+  color: rgba(0, 0, 0, 0.87);
+  text-decoration: none;
+}
+</style>
 <script>
 export default {
   data: () => ({
     drawer: null,
     items: [
-      { text: "Cultivos (OK)", icon: "mdi-tree", action: "/cultivos" },
-      { text: "UEB (OK)", icon: "mdi-city", action: "/ueb" },
+      { text: "Cultivos (OK)", icon: "mdi-tree", action: "/admin/cultivos" },
+      { text: "UEB (OK)", icon: "mdi-city", action: "/admin/ueb" },
       { text: "Reporte General", icon: "mdi-clipboard-text-outline" },
     ],
     gestion: [
       {
         text: "Máquinas de Riego (OK)",
         icon: "mdi-watering-can-outline",
-        action: "/maquinas_riego",
+        action: "/admin/maquinas_riego",
       },
-      { text: "Siembra (OK)", icon: "mdi-tractor", action:'/siembra' },
+      { text: "Siembra (OK)", icon: "mdi-tractor", action: "/admin/siembra" },
       {
         text: "Químicos(OK)",
         icon: "mdi-flask-empty-outline",
-        action: "/quimicos",
+        action: "/admin/quimicos",
       },
       {
         text: "Ausencias (OK)",
         icon: "mdi-account-multiple-check-outline",
-        action: "/ausencias",
+        action: "/admin/ausencias",
       },
       {
         text: "Valores (OK)",
         icon: "mdi-cash-usd-outline",
-        action: "/diaria_acumuladas_por_valores",
+        action: "/admin/diaria_acumuladas_por_valores",
       },
-       {
-        text: "Toneladas",
+      {
+        text: "Toneladas (OK)",
         icon: "mdi-scale",
-        action: "/diaria_acumuladas_por_toneladas",
+        action: "/admin/diaria_acumuladas_por_toneladas",
       },
       {
         text: "Energía-Combustible",
         icon: "mdi-fuel",
-        action: "/energia_combustible",
+        action: "/admin/energia_combustible",
       },
     ],
     security: [
       {
         text: "Roles (OK)",
         icon: "mdi-shield-account-outline",
-        action: "/roles",
+        action: "/admin/roles",
       },
       {
         text: "Usuarios (OK)",
         icon: "mdi-account-outline",
-        action: "/users",
+        action: "/admin/users",
       },
     ],
   }),

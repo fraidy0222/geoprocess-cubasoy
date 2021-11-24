@@ -1,4 +1,4 @@
-<template>
+/<template>
   <div>
     <v-data-table
       item-key="name"
@@ -124,7 +124,7 @@
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
-      {{ text }}
+      <v-icon v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"></v-icon>  {{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
           color="white"
@@ -153,6 +153,7 @@ export default {
     snackbar: false,
     snackColor: "",
     timeout: 2000,
+    icon: true,
     rules: {
       required: (v) => !!v || "Este campo es requerido",
     },
@@ -228,7 +229,7 @@ export default {
         }
       );
       axios
-        .get("api/roles", {})
+        .get("/api/roles", {})
         .then((res) => (this.roles = res.data.roles))
         .catch((err) => {
           if (err.response.status == 401) {
@@ -252,17 +253,19 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete("api/roles/" + this.editedItem.id)
+        .delete("/api/roles/" + this.editedItem.id)
         .then((res) => {
           this.roles.splice(this.editedIndex, 1);
           this.snackbar = true,
           this.text = "Rol eliminado",
           this.snackColor = "success";
+          this.icon = true
         })
         .catch((err) => {
           this.snackbar = true,
           this.text = "Ha occurido un error",
           this.snackColor = "error";
+          this.icon = false
         });
       this.closeDelete();
     },
@@ -286,7 +289,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("api/roles/" + this.editedItem.id, {
+          .put("/api/roles/" + this.editedItem.id, {
             name: this.editedItem.name,
           })
           .then((res) => {
@@ -294,26 +297,30 @@ export default {
             this.snackbar = true,
             this.text = "Rol editado",
             this.snackColor = "success";
+            this.icon = true
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
             
           });
       } else {
         axios
-          .post("api/roles", { name: this.editedItem.name })
+          .post("/api/roles", { name: this.editedItem.name })
           .then((res) => {
             this.roles.push(res.data.role);
               this.snackbar = true,
             this.text = "Rol añadido",
             this.snackColor = "success";
+            this.icon = true
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
           });
       }
       this.close();

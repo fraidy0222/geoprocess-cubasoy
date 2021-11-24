@@ -181,7 +181,7 @@
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
-      {{ text }}
+      <v-icon v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"></v-icon>{{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
           color="white"
@@ -221,7 +221,7 @@ export default {
     snackColor: "",
     timeout: 2000,
     ueb: [],
-    cabeza: 2,
+    icon: true,
     valid: true,
     date: new Date().toISOString().substr(0, 10),
     rules: {
@@ -311,7 +311,7 @@ export default {
         }
       );
       axios
-        .get("api/energias")
+        .get("/api/energias")
         .then((res) => {
           this.energia = res.data.energias;
           this.ueb = res.data.uebs;
@@ -333,17 +333,19 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete("api/energias/" + this.editedItem.id)
+        .delete("/api/energias/" + this.editedItem.id)
         .then((res) => {
           this.energia.splice(this.editedIndex, 1);
           (this.snackbar = true),
             (this.text = "Energía y Combustible añadido"),
             (this.snackColor = "success");
+            this.icon = true
         })
         .catch((err) => {
           (this.snackbar = true),
             (this.text = "Ha occurido un error"),
             (this.snackColor = "error");
+            this.icon = false
         });
       this.closeDelete();
     },
@@ -367,31 +369,35 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("api/energias/" + this.editedItem.id, this.editedItem)
+          .put("/api/energias/" + this.editedItem.id, this.editedItem)
           .then((res) => {
             this.initialize();
             this.snackbar = true,
             this.text = "Energía y Combustible añadido",
             this.snackColor = "success";
+            this.icon = true
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
            this.snackColor = "error";
+           this.icon = false
           });
       } else {
         axios
-          .post("api/energias", this.editedItem)
+          .post("/api/energias", this.editedItem)
           .then((res) => {
             this.energia.push(res.data.energias);
             this.snackbar = true,
             this.text = "Energía y Combustible añadido",
             this.snackColor = "success";
+            this.icon = true
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
           });
       }
       this.close();

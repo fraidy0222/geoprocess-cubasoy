@@ -1,30 +1,21 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="6">
-      <v-img
-        :src="require('../../assets/img/notFound.svg')"
-        max-width="700"
-        max-height="500"
-      >
-        <template v-slot:placeholder>
-          <v-row
-            class="fill-height ma-0"
-            align="center"
-            justify="center"
-          >
-            <v-progress-circular
-              indeterminate
-              color="grey lighten-5"
-            ></v-progress-circular>
-          </v-row>
-        </template>
-      </v-img>
-    </v-col>
-  </v-row>
+  <v-container class="fill-height" fluid>
+    <v-row justify="center" align="center">
+      <v-col sm="6">
+        <v-img
+          :src="require('../../assets/img/404.svg')"
+          max-width="700"
+          max-height="500"
+        />
+      </v-col>
+    </v-row>
+    <div class="mx-auto">
+      <v-btn class="mb-10" color="primary" link @click="$router.go(-1)"
+        >Regresar</v-btn>
+    </div>
+  </v-container>
 </template>
 
 <script>
-export default {
-  
-}
+export default {};
 </script>

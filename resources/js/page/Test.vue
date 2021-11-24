@@ -72,7 +72,7 @@ export default {
         sortable: false,
         value: "name",
       },
-      { text: "Calories", value: "calories" },
+      { text: "Calories"},
       { text: "Fat (g)", value: "fat" },
       { text: "Carbs (g)", value: "carbs" },
       { text: "Protein (g)", value: "protein" },

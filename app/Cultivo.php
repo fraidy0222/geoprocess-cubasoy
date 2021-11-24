@@ -16,4 +16,8 @@ class Cultivo extends Model
     public function siembra () {
         return $this->hasMany(Siembra::class);
     }
+
+    public function toneladas () {
+        return $this->hasMany(Tonelada::class);
+    }
 }
