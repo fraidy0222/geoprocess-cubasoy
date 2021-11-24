@@ -260,7 +260,7 @@
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
-      {{ text }}
+      <v-icon v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"></v-icon>  {{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
           color="white"
@@ -297,6 +297,7 @@ export default {
     timeout: 2000,
     options: [],
     modal: false,
+    icon: true,
     t: [],
     l: [],
     r: [],
@@ -383,14 +384,14 @@ export default {
         }
       );
       axios
-        .get("api/maquinas", {})
+        .get("/api/maquinas", {})
         .then((res) => {
           this.maquinas = res.data.maquina;
           this.ueb = res.data.uebs,
           this.t = res.data.total,
           this.l = res.data.listas,
           this.r = res.data.rotas
-          console.log(res.data.rotas)
+         // console.log(res.data.rotas)
         })
         .catch((err) => {
           if (err.response.status == 401) {
@@ -414,19 +415,21 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete("api/maquinas/" + this.editedItem.id)
+        .delete("/api/maquinas/" + this.editedItem.id)
         .then((res) => {
           this.maquinas.splice(this.editedIndex, 1);
           (this.snackbar = true),
-            (this.text = "Maquina de reigo eliminada"),
-            (this.snackColor = "success");
-              this.initialize()
+          (this.text = "Maquina de reigo eliminada"),
+          (this.snackColor = "success");
+          this.icon = true
+          this.initialize()
         })
         .catch((err) => {
           (this.snackbar = true),
             (this.text = "Ha occurido un error"),
             (this.snackColor = "error");
-          console.log(err.response);
+            this.icon = false
+         // console.log(err.response);
         });
       this.closeDelete();
     },
@@ -450,32 +453,36 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("api/maquinas/" + this.editedItem.id, this.editedItem)
+          .put("/api/maquinas/" + this.editedItem.id, this.editedItem)
           .then((res) => {
             this.initialize();
             this.snackbar = true,
             this.text = "Maquina de riego editada",
             this.snackColor = "success";
+            this.icon = true
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
           });
       } else {
         axios
-          .post("api/maquinas", this.editedItem)
+          .post("/api/maquinas", this.editedItem)
           .then((res) => {
             this.maquinas.push(res.data.maquina);
             this.initialize()
             this.snackbar = true,
             this.text = "Maquina de riego añadida",
             this.snackColor = "success";
+            this.icon = true
           })
           .catch(err => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
           });
       }
       this.close();
@@ -504,7 +511,7 @@ export default {
         }
         const zip = new PizZip(content);
         const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
-        doc.setData({ maquina, t, l});
+        doc.setData({ maquina, t, l });
         console.log(doc)
         try {
           // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)

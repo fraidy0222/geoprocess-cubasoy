@@ -48,9 +48,16 @@ Route::group(['middleware' => ['auth:api'], 'namespace' => 'Api'], function () {
     Route::resource('siembra', 'SiembraController')->except([
         'create', 'edit', 'show'
     ]);
+    Route::resource('toneladas', 'ToneladasController')->except([
+        'create', 'edit', 'show'
+    ]);
     Route::get('/verify', 'UserController@verify');
     Route::post('email/verify', 'UserController@verifyEmail');
-    Route::post('user/role', 'UserController@changeRole');
-}
-);
+
+});
+
 Route::post('login', 'Api\UserController@login');
+
+Route::any('/{any}', function () {
+    return view('welcome');
+  })->where('any', '.*');

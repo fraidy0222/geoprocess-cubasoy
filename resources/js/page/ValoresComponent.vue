@@ -89,27 +89,31 @@
                         <v-text-field
                           v-model="editedItem.venta_diaria_cup"
                           label="Ventas diarias en cup"
-                          :rules="[rules.required]"
+                          :rules="[rules.required, rules.length]"
                           type="number"
                           min="0"
+                          required
+                          counter="6"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
                         <v-text-field
                           v-model="editedItem.venta_mes_cup"
                           label="Ventas del mes en cup"
-                          :rules="[rules.required]"
+                          :rules="[rules.required, rules.length]"
                           type="number"
                           min="0"
+                          required
+                          counter="6"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
                         <v-text-field
                           v-model="editedItem.acumulado"
                           label="Acumulado hasta la fecha"
-                          :rules="[rules.required]"
-                          type="number"
-                          min="0"
+                          :rules="[rules.required, rules.length]"
+                          required
+                          counter="6"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="6">
@@ -118,8 +122,6 @@
                           v-model="editedItem.cultivo"
                           label="Selecione un cultivo"
                           :rules="[rules.required]"
-                          type="number"
-                          min="0"
                           no-data-text="No hay elementos"
                           append-icon="mdi-chevron-down"
                         ></v-select>
@@ -128,7 +130,7 @@
                   </v-container>
                 </v-card-text>
 
-                <v-card-actions>
+                <v-card-actions> 
                   <v-spacer></v-spacer>
                   <v-btn 
                     color="red darken-1" 
@@ -202,7 +204,7 @@
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
-      {{ text }}
+      <v-icon v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"></v-icon>  {{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
           color="white"
@@ -225,6 +227,7 @@ import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import PizZipUtils from "pizzip/utils/index.js";
 
+import {saveAs} from 'file-saver';  
 export default {
   props: {
     number: {
@@ -242,12 +245,14 @@ export default {
     snackColor: "",
     timeout: 2000,
     cultivos: [],
+    icon: true,
     valid: true,
     c: [],
     acumu: [],
     date: new Date().toISOString().substr(0, 10),
     rules: {
       required: (v) => !!v || "Este campo es requerido",
+      length: v => v.length <= 6 || 'El número tiene que ser menor de 6 dígitos',
     },
     headers: [
       {
@@ -255,10 +260,10 @@ export default {
         align: "start",
         value: "id",
       },
-      { text: "CULTIVO", value: "cultivo"},
-      { text: "VENTA DIARIA CUP", value: "venta_diaria_cup" },
-      { text: "VENTA DEL MES CUP", value: "venta_mes_cup" },
-      { text: "ACUMULADO FECHA CUP", value: "acumulado" },
+      { text: "Cultivo", value: "cultivo"},
+      { text: "Venta Diaria CUP", value: "venta_diaria_cup" },
+      { text: "Venta del Mes CUP", value: "venta_mes_cup" },
+      { text: "Acumulado fecha CUP", value: "acumulado" },
       { text: "Acciones", value: "actions", sortable: false },
     ],
     valores: [],
@@ -323,12 +328,12 @@ export default {
         }
       );
       axios
-        .get("api/valores")
+        .get("/api/valores")
         .then((res) => {
           this.valores = res.data.valores;
           this.cultivos = res.data.cultivos;
           this.c = res.data.count;
-          console.log(res.data.count)
+          //console.log(res.data.count)
         })
         .catch((err) => console.log(err));
     },
@@ -347,18 +352,20 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete("api/valores/" + this.editedItem.id)
+        .delete("/api/valores/" + this.editedItem.id)
         .then(res => {
           this.valores.splice(this.editedIndex, 1);
           this.snackbar = true,
           this.text = "Valores eliminada",
           this.snackColor = "success";
+          this.icon = true
           this.initialize()
         })
         .catch(err => {
           this.snackbar = true,
           this.text = "Ha occurido un error",
           this.snackColor = "error";
+          this.icon = false
         });
       this.closeDelete();
     },
@@ -382,33 +389,37 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("api/valores/" + this.editedItem.id, this.editedItem)
+          .put("/api/valores/" + this.editedItem.id, this.editedItem)
           .then((res) => {
             this.initialize();
             this.snackbar = true,
             this.text = "Valores editada",
             this.snackColor = "success";
+            this.icon = true
             this.initialize()
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
           });
       } else {
         axios
-          .post("api/valores", this.editedItem)
+          .post("/api/valores", this.editedItem)
           .then((res) => {
             this.valores.push(res.data.valores);
             this.snackbar = true,
             this.text = "Valores añadida",
             this.snackColor = "success";
+            this.icon = true
             this.initialize()
           })
           .catch(err => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
           });
       }
       this.close();
@@ -418,6 +429,7 @@ export default {
     },
     renderDoc() {
       let valores = this.valores;
+      let c = this.c
       this.loadFile("/documentos/valores.docx", function(
         error,
         content
@@ -427,7 +439,7 @@ export default {
         }
         const zip = new PizZip(content);
         const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
-        doc.setData({ valores });
+        doc.setData({ valores, c });
         try {
           // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
           doc.render();

@@ -121,7 +121,7 @@
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
-      {{ text }}
+       <v-icon v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"></v-icon> {{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
           color="white"
@@ -151,6 +151,7 @@ export default {
     snackbar: false,
     snackColor: "",
     timeout: 2000,
+    icon: true,
     modal: false,
     date: new Date().toISOString().substr(0, 10),
     headers: [
@@ -223,7 +224,7 @@ export default {
         }
       );
       axios
-        .get("api/ueb", {})
+        .get("/api/ueb", {})
         .then((res) => {
           this.uebs = res.data.ueb;
         })
@@ -249,18 +250,20 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete("api/ueb/" + this.editedItem.id)
+        .delete("/api/ueb/" + this.editedItem.id)
         .then((res) => {
           this.uebs.splice(this.editedIndex, 1);
           this.snackbar = true,
           this.text = "UEB eliminada",
           this.snackColor = "success";
+          this.icon = true
         })
         .catch((err) => {
           this.snackbar = true,
           this.text = "Ha occurido un error",
           this.snackColor = "error";
-          console.log(err.response);
+          this.icon = false
+          //console.log(err.response);
         });
       this.closeDelete();
     },
@@ -284,7 +287,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("api/ueb/" + this.editedItem.id, {
+          .put("/api/ueb/" + this.editedItem.id, {
             name: this.editedItem.name,
           })
           .then((res) => {
@@ -292,15 +295,17 @@ export default {
             this.snackbar = true,
             this.text = "UEB editada",
             this.snackColor = "success";
+            this.icon = true
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
           });
       } else {
         axios
-          .post("api/ueb", {
+          .post("/api/ueb", {
             name: this.editedItem.name,
           })
           .then((res) => {
@@ -309,12 +314,14 @@ export default {
             this.snackbar = true,
              this.text = "UEB añadida",
             this.snackColor = "success";
+            this.icon = true
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
-            console.log(err.response);
+            this.icon = false
+            //console.log(err.response);
           });
       }
       this.close();

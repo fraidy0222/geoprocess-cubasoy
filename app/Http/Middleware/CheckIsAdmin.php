@@ -17,10 +17,10 @@ class CheckIsAdmin
     public function handle($request, Closure $next)
     {
         if(Auth::user()->role->name === 'Administrator') {
-            return $next($request);
+           return $next($request);
         }
         else {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            return response()->json(['error' => 'No tienes los permisos necesarios'], 403);
         }
     }
 }

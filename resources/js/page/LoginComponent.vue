@@ -1,56 +1,64 @@
 <template>
   <v-row align="center" justify="center" class="mx-4">
-    <v-card class="elevation-6 rounded-lg" width="500">
+    <v-card class="elevation-6 rounded-lg" width="760">
       <v-card-text class="mt-12">
-        <h2 class="text-center">Inicia sesión con tu cuenta</h2>
-        <h4 class="text-center grey--text mt-10">
-          <v-avatar size="72">
-            <img :src="myImage" alt="Faro" />
-          </v-avatar>
-        </h4>
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-          @submit.prevent="login"
-        >
-          <v-text-field
-            v-model="email"
-            :rules="emailRules"
-            required
-            label="Correo"
-            name="email"
-            outlined
-            append-icon="mdi-email-outline"
-            type="email"
-            class="mt-8"
-          ></v-text-field>
+        <v-row>
+          <v-col cols="12" sm="6" xs="12">
+            <h2 class="text-center">Inicia sesión</h2>
+            <v-form
+              ref="form"
+              v-model="valid"
+              lazy-validation
+              @submit.prevent="login"
+            >
+              <v-text-field
+                v-model="email"
+                :rules="emailRules"
+                required
+                label="Correo"
+                name="email"
+                outlined
+                append-icon="mdi-email-outline"
+                type="email"
+                class="mt-8"
+              ></v-text-field>
 
-          <v-text-field
-            v-model="password"
-            :rules="[passwordRules.length(6)]"
-            required
-            id="password"
-            label="Contraseña"
-            name="password"
-            outlined
-            append-icon="mdi-lock-outline"
-            type="password"
-          ></v-text-field>
-          <v-btn
-            block
-            :loading="loading"
-            :disabled="!valid"
-            color="primary"
-            type="submit"
-            class="mt-4"
-          >
-            Iniciar sesión
-          </v-btn>
-        </v-form>
+              <v-text-field
+                v-model="password"
+                :rules="[passwordRules.length(6)]"
+                required
+                id="password"
+                label="Contraseña"
+                name="password"
+                outlined
+                append-icon="mdi-lock-outline"
+                type="password"
+              ></v-text-field>
+              <v-btn
+                block
+                :loading="loading"
+                :disabled="!valid"
+                color="primary"
+                type="submit"
+                class="mt-4"
+              >
+                Iniciar sesión
+              </v-btn>
+            </v-form>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <img
+              class="d-none d-sm-flex"
+              :src="myImage"
+              alt="Faro"
+              width="300"
+            />
+          </v-col>
+        </v-row>
       </v-card-text>
     </v-card>
-    <v-snackbar v-model="snackbar" color="error">
+    <v-snackbar v-model="snackbar" color="error" top right>
+      <v-icon>mdi-bell-cancel</v-icon>
       {{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
@@ -68,13 +76,8 @@
   </v-row>
 </template>
 
-
-
 <script>
 export default {
-  props: {
-    source: String,
-  },
   data: () => ({
     email: "",
     password: "",
@@ -83,7 +86,7 @@ export default {
     snackbar: false,
     text: "",
     valid: true,
-    myImage: require("../../assets/img/faro.svg"),
+    myImage: require("../../assets/img/git.gif"),
     passwordRules: {
       length: (len) => (v) =>
         (v || "").length >= len ||
@@ -126,15 +129,16 @@ export default {
       axios
         .post("api/login", { email: this.email, password: this.password })
         .then((res) => {
-          localStorage.setItem("token", res.data.token);
-          if (res.data.isAdmin) {
-            this.$router.push("/admin");
-          }
-          if (res.data.editor) {
+          localStorage.setItem("token", res.data.user.api_token);
+          this.$store.commit("login", res.data.user);
+          localStorage.setItem("role", res.data.user.role.name);
+          if (res.data.user.role.name == "Administrator") {
+            this.$router.push("/admin/home");
+          } else if (res.data.user.role.name == "Editor") {
             this.$router
               .push("/test")
               .then((res) => {
-                console.log(res.data.editor);
+                //console.log(res.data.editor);
               })
               .catch((error) => {
                 // console.log(error.response)

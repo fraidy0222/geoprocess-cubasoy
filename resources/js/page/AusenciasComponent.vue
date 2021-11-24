@@ -16,61 +16,7 @@
         'items-per-page-text': 'Ausencias por páginas',
       }"
     >
-      <template v-slot:body="{ items }">
-        <tbody>
-          <tr v-for="item in items" :key="item.id">
-            <td>{{ item.ueb }}</td>
-            <td>{{ item.certificados_medicos }}</td>
-            <td>{{ item.lic_maternidad }}</td>
-            <td>{{ item.otras }}</td>
-            <td>{{ item.vacaciones }}</td>
-            <td>{{ item.aus_autorizadas }}</td>
-            <td>{{ item.aus_injustificadas }}</td>
-            <td>{{ item.aislados }}</td>
-            <td>{{ item.positivos }}</td>
-            <td>{{ item.madres_ninnos }}</td>
-            <td>
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-bind="attrs" v-on="on" icon>
-                    <v-icon
-                      color="warning"
-                      class="mr-2"
-                      @click="editItem(item)"
-                    >
-                      mdi-pencil
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Editar</span>
-              </v-tooltip>
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-bind="attrs" v-on="on" icon>
-                    <v-icon color="error" @click="deleteItem(item)">
-                      mdi-delete
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Eliminar</span>
-              </v-tooltip>
-            </td>
-          </tr>
-          <tr v-for="item in count" :key="item.id">
-            <td class="font-weight-black">SUB - Total</td>
-            <td class="font-weight-black">{{ item.certificados }}</td>
-            <td class="font-weight-black">{{ item.otros }}</td>
-            <td class="font-weight-black">{{ item.maternidad }}</td>
-            <td class="font-weight-black">{{ item.vacaciones }}</td>
-            <td class="font-weight-black">{{ item.auto }}</td>
-            <td class="font-weight-black">{{ item.inju }}</td>
-            <td class="font-weight-black">{{ item.aislados }}</td>
-            <td class="font-weight-black">{{ item.posi }}</td>
-            <td class="font-weight-black">{{ item.madre }}</td>
-            <td></td>
-          </tr>
-        </tbody>
-      </template>
+   /
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Ausencias</v-toolbar-title>
@@ -238,7 +184,7 @@
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
-      {{ text }}
+      <v-icon v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"></v-icon> {{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
           color="white"
@@ -276,6 +222,7 @@ export default {
     ueb: [],
     count: [],
     total: [],
+    icon: true,
     valid: true,
     rules: {
       required: (v) => !!v || "Este campo es requerido",
@@ -371,14 +318,14 @@ export default {
         }
       );
       axios
-        .get("api/ausencias")
+        .get("/api/ausencias")
         .then((res) => {
           this.ausencias = res.data.ausencias;
           this.ueb = res.data.uebs;
           this.count = res.data.count;
           this.total = res.data.total;
-          console.log(res.data.count)
-          console.log(res.data.total)
+          // console.log(res.data.count)
+          // console.log(res.data.total)
         })
         .catch((err) => console.log(err));
     },
@@ -397,18 +344,20 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete("api/ausencias/" + this.editedItem.id)
+        .delete("/api/ausencias/" + this.editedItem.id)
         .then((res) => {
           this.ausencias.splice(this.editedIndex, 1);
           (this.snackbar = true),
           (this.text = "Ausencia eliminada"),
           (this.snackColor = "success");
+          this.icon = true
           this.initialize();
         })
         .catch((err) => {
           (this.snackbar = true),
           (this.text = "Ha occurido un error"),
           (this.snackColor = "error");
+          this.icon = false
         });
       this.closeDelete();
     },
@@ -432,32 +381,36 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("api/ausencias/" + this.editedItem.id, this.editedItem)
+          .put("/api/ausencias/" + this.editedItem.id, this.editedItem)
           .then((res) => {
             this.initialize();
             (this.snackbar = true),
             (this.text = "Ausencia editada"),
             (this.snackColor = "success");
+            this.icon = true
           })
           .catch((err) => {
             (this.snackbar = true),
             (this.text = "Ha occurido un error"),
             (this.snackColor = "error");
+            this.icon = false
           });
       } else {
         axios
-          .post("api/ausencias", this.editedItem)
+          .post("/api/ausencias", this.editedItem)
           .then((res) => {
             this.ausencias.push(res.data.ausencias);
             this.initialize();
             (this.snackbar = true),
               (this.text = "Ausencia añadida"),
               (this.snackColor = "success");
+              this.icon = true
           })
           .catch((err) => {
             (this.snackbar = true),
               (this.text = "Ha occurido un error"),
               (this.snackColor = "error");
+              this.icon = false
           });
       }
       this.close();

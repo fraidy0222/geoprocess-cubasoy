@@ -91,20 +91,17 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn 
-                    color="red darken-1" 
-                    outlined
-                    @click="close">
-                      Cancelar
-                    </v-btn>
-                    <v-btn 
+                  <v-btn color="red darken-1" outlined @click="close">
+                    Cancelar
+                  </v-btn>
+                  <v-btn
                     color="primary"
-                    :disabled="!valid" 
+                    :disabled="!valid"
                     type="submit"
                     @click.prevent="save"
-                    >
-                      Guardar
-                    </v-btn>
+                  >
+                    Guardar
+                  </v-btn>
                 </v-card-actions>
               </v-form>
             </v-card>
@@ -116,7 +113,7 @@
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn outlined  @click="closeDelete">Cancelar</v-btn>
+                <v-btn outlined @click="closeDelete">Cancelar</v-btn>
                 <v-btn depressed color="error" @click="deleteItemConfirm"
                   >Borrar</v-btn
                 >
@@ -163,6 +160,9 @@
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
+      <v-icon
+        v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"
+      ></v-icon>
       {{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
@@ -176,17 +176,17 @@
           <v-icon>mdi-close-circle</v-icon>
         </v-btn>
       </template>
-    </v-snackbar>  
+    </v-snackbar>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   data: () => ({
     state: {
-      nombre: 'San Lius',
+      nombre: "San Lius",
     },
     search: "",
     dialog: false,
@@ -196,9 +196,10 @@ export default {
     snackbar: false,
     snackColor: "",
     timeout: 2000,
-    success: '',
-    error: '',
+    success: "",
+    error: "",
     roles: [],
+    icon: true,
     show: false,
     show1: false,
     rules: {
@@ -253,7 +254,7 @@ export default {
         ? "Las contraseñas no coinciden"
         : true;
     },
-    ...mapGetters(['Admin']),
+    ...mapGetters(["Admin"]),
   },
 
   watch: {
@@ -294,11 +295,11 @@ export default {
         }
       );
       axios
-        .get("api/user", {})
+        .get("/api/user", {})
         .then((res) => {
           this.users = res.data.user;
           this.roles = res.data.roles;
-          console.log(res.data.user)
+          //console.dir(res.data.user)
         })
         .catch((err) => console.log(err));
     },
@@ -317,18 +318,19 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete("api/user/" + this.editedItem.id)
+        .delete("/api/user/" + this.editedItem.id)
         .then((res) => {
           this.users.splice(this.editedIndex, 1);
-          this.snackbar = true,
-          this.text = "Usuario eliminado",
-          this.snackColor = "success";
+          (this.snackbar = true),
+            (this.text = "Usuario eliminado"),
+            (this.snackColor = "success");
+          this.icon = true;
         })
         .catch((err) => {
-          this.snackbar = true,
-          this.text = "Ha occurido un error",
-          this.snackColor = "error";
-          console.log(err.response);
+          (this.snackbar = true),
+            (this.text = "Ha occurido un error"),
+            (this.snackColor = "error");
+          this.icon = false;
         });
       this.closeDelete();
     },
@@ -352,49 +354,53 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("api/user/" + this.editedItem.id, this.editedItem)
-          .then(res => {
+          .put("/api/user/" + this.editedItem.id, this.editedItem)
+          .then((res) => {
             this.initialize();
-            this.snackbar = true,
-            this.text = "Usuario editado",
-            this.snackColor = "success";
+            (this.snackbar = true),
+              (this.text = "Usuario editado"),
+              (this.snackColor = "success");
+            this.icon = true;
           })
-          .catch(err => {
-            this.snackbar = true,
-            this.text = "Ha occurido un error",
-            this.snackColor = "error";
-           
+          .catch((err) => {
+            (this.snackbar = true),
+              (this.text = "Ha occurido un error"),
+              (this.snackColor = "error");
+            this.icon = false;
           });
       } else {
         axios
-          .post("api/user", this.editedItem)
-          .then(res => {
+          .post("/api/user", this.editedItem)
+          .then((res) => {
             this.users.push(res.data.user);
-            this.snackbar = true,
-            this.text = "Usuario añadido",
-            this.snackColor = "success";
+            (this.snackbar = true),
+              (this.text = "Usuario añadido"),
+              (this.snackColor = "success");
+            this.icon = true;
           })
-          .catch(err => {
-            this.snackbar = true,
-            this.text = "Ha occurido un error",
-            this.snackColor = "error";
+          .catch((err) => {
+            (this.snackbar = true),
+              (this.text = "Ha occurido un error"),
+              (this.snackColor = "error");
+            this.icon = false;
           });
       }
       this.close();
     },
-     checkEmail() {
-      if(/.+@.+\..+/.test(this.editedItem.email)) {
-        axios.post('api/email/verify', {'email': this.editedItem.email})
-        .then(res => {
-          this.success = res.data.messages
-          this.error = ''
-        })
-        .catch(error => {
-          this.success = '';
-          this.error = 'El correo ya existe'
-        })
+    checkEmail() {
+      if (/.+@.+\..+/.test(this.editedItem.email)) {
+        axios
+          .post("/api/email/verify", { email: this.editedItem.email })
+          .then((res) => {
+            this.success = res.data.messages;
+            this.error = "";
+          })
+          .catch((error) => {
+            this.success = "";
+            this.error = "El correo ya existe";
+          });
       }
     },
-  }
-}
+  },
+};
 </script>

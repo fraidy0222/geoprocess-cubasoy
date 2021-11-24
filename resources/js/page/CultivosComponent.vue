@@ -122,7 +122,7 @@
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
-      {{ text }}
+      <v-icon v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"></v-icon> {{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
           color="white"
@@ -151,6 +151,7 @@ export default {
     snackColor: "",
     timeout: 2000,
     valid: true,
+    icon: true,
     headers: [
       {
         text: "ID",
@@ -224,7 +225,7 @@ export default {
         }
       );
       axios
-        .get("api/cultivo", {})
+        .get("/api/cultivo", {})
         .then((res) => {
           this.cultivos = res.data.cultivo;
         })
@@ -245,18 +246,20 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete("api/cultivo/" + this.editedItem.id)
+        .delete("/api/cultivo/" + this.editedItem.id)
         .then((res) => {
           this.cultivos.splice(this.editedIndex, 1);
           (this.snackbar = true),
             (this.text = "Cultivo eliminado"),
             (this.snackColor = "success");
+            this.icon = true
         })
         .catch((err) => {
           (this.snackbar = true),
             (this.text = "Ha occurido un error"),
             (this.snackColor = "error");
-          console.log(err.response);
+            this.icon = false
+          //console.log(err.response);
         });
       this.closeDelete();
     },
@@ -280,7 +283,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("api/cultivo/" + this.editedItem.id, {
+          .put("/api/cultivo/" + this.editedItem.id, {
             name: this.editedItem.name,
           })
           .then((res) => {
@@ -288,15 +291,17 @@ export default {
             this.snackbar = true,
             this.text = "Cultivo editado",
             this.snackColor = "success";
+            this.icon = true
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
           });
       } else {
         axios
-          .post("api/cultivo", {
+          .post("/api/cultivo", {
             name: this.editedItem.name,
           })
           .then((res) => {
@@ -304,12 +309,13 @@ export default {
             this.snackbar = true,
             this.text = "Cultivo añadido",
             this.snackColor = "success";
+            this.icon = true
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
-          
+            this.icon = false
           });
       }
       this.close();

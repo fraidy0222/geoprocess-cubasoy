@@ -326,7 +326,7 @@
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
-      {{ text }}
+       <v-icon v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"></v-icon> {{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
           color="white"
@@ -367,6 +367,7 @@ export default {
     snackbar: false,
     snackColor: "",
     timeout: 2000,
+    icon: true,
     ueb: [],
     cc: [],
     a: [],
@@ -465,7 +466,7 @@ export default {
         }
       );
       axios
-        .get("api/quimicos", {})
+        .get("/api/quimicos", {})
         .then((res) => {
           this.quimicos = res.data.quimicos;
           this.ueb = res.data.uebs;
@@ -490,18 +491,20 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete("api/quimicos/" + this.editedItem.id)
+        .delete("/api/quimicos/" + this.editedItem.id)
         .then((res) => {
           this.quimicos.splice(this.editedIndex, 1);
           this.snackbar = true,
           this.text = "Químico eliminado",
           this.snackColor = "success";
+          this.icon = true
           this.initialize()
         })
         .catch((err) => {
           this.snackbar = true,
          this.text = "Ha occurido un error",
           this.snackColor = "error";
+          this.icon = false
         });
       this.closeDelete();
     },
@@ -524,34 +527,38 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("api/quimicos/" + this.editedItem.id, this.editedItem)
+          .put("/api/quimicos/" + this.editedItem.id, this.editedItem)
           .then((res) => {
             this.initialize();
             this.snackbar = true,
             this.text = "Químico editado",
             this.snackColor = "success";
+            this.icon = true
             this.initialize()
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
           });
       } else {
         axios
-          .post("api/quimicos", this.editedItem)
+          .post("/api/quimicos", this.editedItem)
           .then((res) => {
             console.dir(res);
             this.quimicos.push(res.data.quimicos);
             this.snackbar = true,
             this.text = "Químico añadido",
             this.snackColor = "success";
+            this.icon = true
             this.initialize()
           })
           .catch((err) => {
             this.snackbar = true,
             this.text = "Ha occurido un error",
             this.snackColor = "error";
+            this.icon = false
           });
       }
       this.close();

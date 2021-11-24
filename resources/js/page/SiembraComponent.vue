@@ -434,7 +434,7 @@ export default {
         }
       );
       axios
-        .get("api/siembra", {})
+        .get("/api/siembra", {})
         .then((res) => {
           this.siembra = res.data.siembra;
           this.ueb = res.data.uebs;
@@ -457,7 +457,7 @@ export default {
 
     deleteItemConfirm() {
       axios
-        .delete("api/siembra/" + this.editedItem.id)
+        .delete("/api/siembra/" + this.editedItem.id)
         .then((res) => {
           this.siembra.splice(this.editedIndex, 1);
           this.snackbar = true,
@@ -491,7 +491,7 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("api/siembra/" + this.editedItem.id, this.editedItem)
+          .put("/api/siembra/" + this.editedItem.id, this.editedItem)
           .then((res) => {
             this.initialize();
             this.snackbar = true,
@@ -506,7 +506,7 @@ export default {
           });
       } else {
         axios
-          .post("api/siembra", this.editedItem)
+          .post("/api/siembra", this.editedItem)
           .then((res) => {
             console.dir(res);
             this.siembra.push(res.data.siembra);
