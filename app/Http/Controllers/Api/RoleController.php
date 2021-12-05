@@ -28,6 +28,7 @@ class RoleController extends Controller
     {
         $role = Role::create([
             'name' => $request->name,
+            'description' => $request->description
         ]);
 
         return response()->json(['role' => $role], 200);
@@ -44,6 +45,7 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         $role->name = $request->name;
+        $role->description = $request->description;
 
         $role->save();
     

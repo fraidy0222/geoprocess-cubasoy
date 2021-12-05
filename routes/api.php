@@ -51,6 +51,12 @@ Route::group(['middleware' => ['auth:api'], 'namespace' => 'Api'], function () {
     Route::resource('toneladas', 'ToneladasController')->except([
         'create', 'edit', 'show'
     ]);
+
+    // incidencias
+    Route::resource('incidencias_siembra', 'IncidenciaSiembraController')->except([
+        'create', 'edit', 'show'
+    ]);
+
     Route::get('/verify', 'UserController@verify');
     Route::post('email/verify', 'UserController@verifyEmail');
 

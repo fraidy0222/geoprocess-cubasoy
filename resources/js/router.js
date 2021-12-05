@@ -4,25 +4,34 @@ import VueRouter from "vue-router"
 // middlewares
 import admin from "./middlewares/admin"
 import editor from "./middlewares/editor"
+import usuario_ueb from './middlewares/usuario_ueb';
 
 // routes
 const Login = () => import("./page/LoginComponent")
 const Admin = () => import("./components/layouts/AdminComponent")
-const Roles = () => import("./page/RolesComponent")
-const Ueb = () => import("./page/UebComponent")
-const Cultivo = () => import("./page/CultivosComponent")
-const Ausencia = () => import("./page/AusenciasComponent")
-const User = () => import("./page/UserComponent")
+const Roles = () => import("./page/admin/RolesComponent")
+const Ueb = () => import("./page/editor/UebComponent")
+const Productos = () => import("./page/editor/CultivosComponent")
+const Ausencia = () => import("./page/editor/AusenciasComponent")
+const User = () => import("./page/admin/UserComponent")
 const Test = () => import("./page/Test")
-const Quimicos = () => import("./page/QuimicosComponent")
-const Valores = () => import("./page/ValoresComponent")
-const Toneladas = () => import("./page/ToneladasComponent")
+const Quimicos = () => import("./page/editor/QuimicosComponent")
+const Valores = () => import("./page/editor/ValoresComponent")
+const Toneladas = () => import("./page/editor/ToneladasComponent")
 const NotFound = () => import("./page/NotFoundComponent")
-const Energia = () => import("./page/EnergiaComponent")
-const Maquinas = () => import("./page/MaquinasComponent")
-const Siembra = () => import("./page/SiembraComponent")
-const Principal = () => import("./page/PrincipalComponent")
+const Energia = () => import("./page/editor/EnergiaComponent")
+const Maquinas = () => import("./page/editor/MaquinasComponent")
+const Siembra = () => import("./page/editor/SiembraComponent")
+const Principal = () => import("./page/admin/PrincipalComponent")
 const NoAutorizado = () => import("./page/NoAutorizadoComponent")
+
+// rol editor
+const Editor = () => import("./components/layouts/EditorComponent");
+const IncidenciaSiembra = () => import('./page/editor/IncidenciasSiembraComponent');
+
+// rol usuario ueb
+const UsuarioUeb = () => import("./components/layouts/UsuarioUebComponent")
+const General = () => import("./page/usuario_ueb/ReporteGeneralComponent")
 
 import NProgress from "nprogress/nprogress.js"
 import "nprogress/nprogress.css"
@@ -64,10 +73,12 @@ const routes = [
     beforeEnter: verify,
     // meta: { middleware: [editor] },
   },
+
+  // admin
   {
     path: "/admin",
     component: Admin,
-    meta: { middleware: [admin] },
+    // meta: { middleware: [admin] },
     redirect: "/admin/home",
     children: [
       {
@@ -76,7 +87,7 @@ const routes = [
         name: "home",
       },
       {
-        path: "users",
+        path: "usuarios",
         component: User,
         name: "User",
       },
@@ -85,6 +96,18 @@ const routes = [
         component: Roles,
         name: "Roles",
       },
+    ],
+    beforeEnter: verify,
+  },
+
+  // editor 
+  {
+    path: '/editor',
+    component: Editor,
+    // meta: { middleware: [editor] },
+    name: 'Editor',
+    // redirect: "/editor/home",
+    children: [
       {
         path: "maquinas_riego",
         component: Maquinas,
@@ -97,9 +120,9 @@ const routes = [
         name: "Ueb",
       },
       {
-        path: "cultivos",
-        component: Cultivo,
-        name: "Cultivo",
+        path: "productos",
+        component: Productos,
+        name: "Productos",
       },
       {
         path: "ausencias",
@@ -131,9 +154,61 @@ const routes = [
         component: Siembra,
         name: "Siembra",
       },
+      // incidencias
+      {
+        path: "incidencias_siembra",
+        component: IncidenciaSiembra,
+        name: 'Incidencia Siembra'
+      }
     ],
     beforeEnter: verify,
   },
+  
+  // usuario ueb
+  {
+    path: '/usuario_ueb',
+    component: UsuarioUeb,
+    name: 'UsuarioUeb',
+    // meta: { middleware: [usuario_ueb] },
+    children: [
+      {
+        path: "maquinas_riego",
+        component: Maquinas,
+        name: "Generar Maquinas",
+      },
+      {
+        path: "ausencias",
+        component: Ausencia,
+        name: "Generar Ausencia",
+      },
+      {
+        path: "quimicos",
+        component: Quimicos,
+        name: "Generar Quimicos",
+      },
+      {
+        path: "diaria_acumuladas_por_valores",
+        component: Valores,
+        name: "Generar Valores",
+      },
+      {
+        path: "diaria_acumuladas_por_toneladas",
+        component: Toneladas,
+        name: "Generar Toneladas",
+      },
+      {
+        path: "energia_combustible",
+        component: Energia,
+        name: "Generar Energia",
+      },
+      {
+        path: "siembra",
+        component: Siembra,
+        name: "Generar Incidencia Siembra",
+      },
+    ],
+    beforeEnter: verify,
+  }
 ]
 
 const router = new VueRouter({ mode: "history", routes })
@@ -163,7 +238,6 @@ router.beforeEach(async (to, from, next) => {
     wasNextCalled = true
     nextArgs = args
   }
-
   const middleware = to.matched
     .map((route) => route.meta.middleware || [])
     .reduce((acc, curr) => [...acc, ...curr], [])
@@ -173,7 +247,6 @@ router.beforeEach(async (to, from, next) => {
       return next(...nextArgs)
     }
   }
-
   next()
 })
 

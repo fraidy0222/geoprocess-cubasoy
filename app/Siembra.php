@@ -29,4 +29,10 @@ class Siembra extends Model
     {
         return $this->belongsTo(Cultivo::class);
     }
+
+    public function incidencia_siembra() 
+    {
+     return $this->hasMany(IncidenciaSiembra::class);
+    }
+    
 }

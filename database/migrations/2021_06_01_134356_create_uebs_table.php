@@ -18,7 +18,7 @@ class CreateUebsTable extends Migration
             $table->string('name', 255);
             $table->timestamps();
         });
-    }
+}
 
     /**
      * Reverse the migrations.

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Siembra;
 use App\Ueb;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UebController extends Controller
 {
@@ -15,19 +17,7 @@ class UebController extends Controller
      */
     public function index()
     {
-    
-        // // sumar un elemento de la base de datos 
-
-        // $total = DB::table('uebs')
-        // ->select(DB::raw('sum(total_maquinas_riego) as total'))
-        // ->get();
-
-        // $listas = DB::table('uebs')
-        // ->select(DB::raw('sum(maquinas_listas) as listas'))
-        // ->get();
-
-        return response()->json(['ueb' => Ueb::all()], 200);
-      
+        return response()->json(['ueb' => Ueb::all()], 200); 
     }
 
     /**
@@ -39,7 +29,7 @@ class UebController extends Controller
     public function store(Request $request)
     {
         $ueb = Ueb::create([
-            'name' => $request->name
+            'name' => $request->name,
         ]);
         
         $ueb->save();

@@ -21,7 +21,7 @@ class SiembraController extends Controller
         return response()->json([
             'siembra' => SiembraResource::collection(Siembra::all()),
             'uebs' => Ueb::pluck('name')->all(),
-            'cultivos' => Cultivo::pluck('name')->all()
+            'cultivos' => Cultivo::pluck('name')->all(),
         ], 200);
     }
 
