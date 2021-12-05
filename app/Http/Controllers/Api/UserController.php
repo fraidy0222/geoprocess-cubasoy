@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Str;
 use App\Http\Resources\User as UserResource;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -21,7 +22,7 @@ class UserController extends Controller
   {
     return response()->json(['user' => UserResource::collection(User::all()), 'roles' => Role::pluck('name')->all()], 200);
   }
-
+  
   public function store(Request $request)
   {
     $role = Role::where('name', $request->role)->first();
@@ -59,7 +60,7 @@ class UserController extends Controller
   }
   public function login(Request $request)
   {
-    $credentials = $request->only('email', 'password');
+    $credentials = $request->only('name', 'password');
 
     if (Auth::attempt($credentials)) {
       Auth::user()->api_token = Str::random(80);
@@ -71,7 +72,7 @@ class UserController extends Controller
 
       return response()->json(compact('user'));
     }
-    return response()->json(['status' => 'Correo y contraseña incorrectos'], 403);
+    return response()->json(['status' => 'Usuario y contraseña incorrectos'], 403);
   }
 
   public function verify(Request $request)

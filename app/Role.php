@@ -9,12 +9,12 @@ class Role extends Model
    // protected $guarded = [];
     
     protected $fillable = [
-        'name'
+        'name', 'description'
     ];
 
-    // public function user ()
-    // {
-    //     $this->belongsTo(User::class);
-    // }
+    protected $casts = [
+        'updated_at' => 'date:d-m-y',
+        'created_at' => 'date:d-m-y'
+    ];
 }
     

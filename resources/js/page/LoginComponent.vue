@@ -12,17 +12,15 @@
               @submit.prevent="login"
             >
               <v-text-field
-                v-model="email"
-                :rules="emailRules"
+                v-model="nameUser"
                 required
-                label="Correo"
+                label="Usuario"
                 name="email"
                 outlined
-                append-icon="mdi-email-outline"
-                type="email"
+                append-icon="mdi-account-outline"
+                type="text"
                 class="mt-8"
               ></v-text-field>
-
               <v-text-field
                 v-model="password"
                 :rules="[passwordRules.length(6)]"
@@ -79,7 +77,7 @@
 <script>
 export default {
   data: () => ({
-    email: "",
+    nameUser: "",
     password: "",
     loading: false,
     pregresColor: "",
@@ -91,16 +89,16 @@ export default {
       length: (len) => (v) =>
         (v || "").length >= len ||
         `Inválido el tamaño de caracteres, requeridos ${len}`,
-      password: (v) =>
-        !!(v || "").match(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/
-        ) ||
-        "La contraseña debe tener letras en mayúsculas, números y carateres especiales como(*#$)",
+      // password: (v) =>
+      //   !!(v || "").match(
+      //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/
+      //   ) ||
+      //   "La contraseña debe tener letras en mayúsculas, números y carateres especiales como(*#$)",
     },
-    emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "El correo debe ser válido",
-    ],
+    // emailRules: [
+    //   (v) => !!v || "E-mail is required",
+    //   (v) => /.+@.+\..+/.test(v) || "El correo debe ser válido",
+    // ],
   }),
   methods: {
     login: function () {
@@ -127,22 +125,25 @@ export default {
         }
       );
       axios
-        .post("api/login", { email: this.email, password: this.password })
+        .post("api/login", { name: this.nameUser, password: this.password })
         .then((res) => {
           localStorage.setItem("token", res.data.user.api_token);
           this.$store.commit("login", res.data.user);
           localStorage.setItem("role", res.data.user.role.name);
-          if (res.data.user.role.name == "Administrator") {
+          if (res.data.user.role.name == "Administrador") {
             this.$router.push("/admin/home");
           } else if (res.data.user.role.name == "Editor") {
             this.$router
-              .push("/test")
+              .push("/editor")
               .then((res) => {
                 //console.log(res.data.editor);
               })
               .catch((error) => {
                 // console.log(error.response)
               });
+          }
+          else if (res.data.user.role.name == "Usuario UEB") {
+            this.$router.push('/usuario_ueb')
           }
         })
         .catch((error) => {

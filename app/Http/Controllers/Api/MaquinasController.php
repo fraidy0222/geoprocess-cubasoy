@@ -40,7 +40,7 @@ class MaquinasController extends Controller
 
     public function store(Request $request)
     {
-        $ueb = Ueb::where('name', $request->ueb)->first();
+        $ueb = Ueb::where('name', 'incidencia_maquina_rota', $request->ueb)->first();
 
         $maquina =  new Maquinas();
             $maquina->total_maquinas_riego = request('total_maquinas_riego');

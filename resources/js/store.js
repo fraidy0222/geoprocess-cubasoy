@@ -13,7 +13,9 @@ export default new Vuex.Store({
   },
    getters: {
      user: state => state.auth.user,
-     isAdmin: state => state.auth.user?.role.name === 'Administrator'
+     isAdmin: state => state.auth.user?.role.name === 'Administrator',
+     isEditor: state => state.auth.user?.role.name === 'Editor',
+     isUsuarioUeb: state => state.auth.user?.role.name === 'Usuario UEB'
    },
    mutations: {
      login(state, user) {

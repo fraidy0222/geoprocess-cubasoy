@@ -10,6 +10,12 @@ class Cultivo extends Model
         'name'
     ];
 
+    protected $casts = [
+      'created_at' => 'date:d-m-y',
+      'updated_at' => 'date:d-m-y',
+    ];
+    
+
     public function ventas_diarias () {
         return $this->hasMany(Valores::class);
     }
@@ -19,5 +25,10 @@ class Cultivo extends Model
 
     public function toneladas () {
         return $this->hasMany(Tonelada::class);
+    }
+
+    public function incidencia_siembra() 
+    {
+     return $this->hasMany(IncidenciaSiembra::class);
     }
 }

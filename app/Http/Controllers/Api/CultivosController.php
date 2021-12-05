@@ -30,7 +30,6 @@ class CultivosController extends Controller
         $cultivo = Cultivo::create([
             'name' => $request->name,
         ]);
-
         return response()->json(['cultivo' => $cultivo], 200);
     }
 
@@ -50,7 +49,7 @@ class CultivosController extends Controller
     
         return response()->json(['cultivo' => $cultivo], 200);
     }
-
+    
     /**
      * Remove the specified resource from storage.
      *

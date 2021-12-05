@@ -42,6 +42,11 @@ class User extends Authenticatable
      return $this->belongsTo(Role::class);
    }
 
+   public function archivo () 
+   {
+       return $this->hasMany(Archivo::class);
+   }
+
   //  public function isAdmin()
   //  {
   //     return strtolower($this->role->name) === 'administrator';
