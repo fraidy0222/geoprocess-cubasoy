@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCosechasTable extends Migration
+class CreateIncidenciaCosechasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateCosechasTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosechas', function (Blueprint $table) {
+        Schema::create('incidencia_cosechas', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('ueb_id')->nullable();
             $table->unsignedBigInteger('cultivo_id')->nullable();
-            $table->integer('cc');
+            $table->unsignedBigInteger('cosecha_id')->nullable();
+            $table->string('cc');
             $table->float('area_total');
             $table->float('a_c_diario');
             $table->float('a_c_acum')->nullable();
@@ -32,6 +33,7 @@ class CreateCosechasTable extends Migration
 
             $table->foreign('ueb_id')->references('id')->on('uebs')->onDelete('cascade');
             $table->foreign('cultivo_id')->references('id')->on('cultivos')->onDelete('cascade');
+            $table->foreign('cosecha_id')->references('id')->on('cosechas')->onDelete('cascade');
         });
     }
 
@@ -42,6 +44,6 @@ class CreateCosechasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosechas');
+        Schema::dropIfExists('incidencia_cosechas');
     }
 }

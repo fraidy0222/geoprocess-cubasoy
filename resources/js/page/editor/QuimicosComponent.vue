@@ -17,9 +17,7 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <v-avatar color="primary">
-                  <span class="white--text text-h6">{{ c.cc }}</span>
-                </v-avatar>
+                 <h2 class="text-h6">{{ c.cc }}</h2>
               </v-list-item-icon>
             </v-list-item>
           </v-list>
@@ -40,9 +38,7 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <v-avatar color="primary">
-                  <span class="white--text text-h6">{{ a.a }}</span>
-                </v-avatar>
+                 <h2 class="text-h6">{{ a.a }}</h2>
               </v-list-item-icon>
             </v-list-item>
           </v-list>
@@ -63,9 +59,7 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <v-avatar color="primary">
-                  <span class="white--text text-h6">{{ c.c }}</span>
-                </v-avatar>
+                <h2 class="text-h6">{{ c.c }}</h2>
               </v-list-item-icon>
             </v-list-item>
           </v-list>
@@ -85,7 +79,7 @@
       :items-per-page="10"
       :footer-props="{
         'items-per-page-options': [10, 15, 20],
-        'items-per-page-text': 'Usuarios por páginas',
+        'items-per-page-text': 'Químicos por páginas',
       }"
     >
       <template v-slot:[`item.comienza`]="{ item }">
@@ -103,9 +97,9 @@
                 <v-icon>mdi-plus</v-icon>
                 Añadir
               </v-btn>
-              <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
+              <!-- <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
                 Exportar a Word
-              </v-btn>
+              </v-btn> -->
             </template>
             <v-card>
               <v-card-title>
@@ -375,6 +369,7 @@ export default {
     menu1: false,
     menu2: false,
     time: null,
+    date: new Date().toLocaleDateString(),
     rules: {
       required: (v) => !!v || "Este campo es requerido",
     },
@@ -546,7 +541,6 @@ export default {
         axios
           .post("/api/quimicos", this.editedItem)
           .then((res) => {
-            console.dir(res);
             this.quimicos.push(res.data.quimicos);
             this.snackbar = true,
             this.text = "Químico añadido",
@@ -571,6 +565,7 @@ export default {
       let cc = this.cc;
       let a = this.a;
       let c = this.c;
+      let date = this.date
       this.loadFile("/documentos/quimicos.docx", function (error, content) {
         if (error) {
           throw error;
@@ -580,7 +575,7 @@ export default {
           paragraphLoop: true,
           linebreaks: true,
         });
-        doc.setData({ quimicos, cc, a, c });
+        doc.setData({ quimicos, cc, a, c, date });
         try {
           // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
           doc.render();

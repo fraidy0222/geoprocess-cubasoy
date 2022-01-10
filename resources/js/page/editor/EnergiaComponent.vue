@@ -17,7 +17,7 @@
       :items-per-page="10"
       :footer-props="{
         'items-per-page-options': [10, 15, 20],
-        'items-per-page-text': 'Energia por páginas',
+        'items-per-page-text': 'Energía por páginas',
       }"
     >
    <template
@@ -42,9 +42,9 @@
                 <v-icon>mdi-plus</v-icon>
                 Añadir
               </v-btn>
-              <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
+              <!-- <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
                 Exportar a Word
-              </v-btn>
+              </v-btn> -->
             </template>
             <v-card>
               <v-card-title>
@@ -52,51 +52,50 @@
               </v-card-title>
               <v-form v-model="valid" @submit.stop.prevent="save">
                 <v-card-text>
-                  <v-container>
                     <h3 class="text-uppercase text--primary">Energía</h3>
                     <v-row>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.plan_mes_energia"
                           label="Plan Mes"
                           :rules="[rules.required]"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.plan_real_energia"
-                          label="Plan Real "
+                          label="Plan Real"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.porciento_energia"
-                          label="%"
+                          label="Porciento"
                         ></v-text-field>
                       </v-col>
                     </v-row>
                     <h3 class="text-uppercase text--primary">Combustible</h3>
                     <v-row>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.plan_mes_petroleo"
                           label="Plan Mes"
                           :rules="[rules.required]"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.plan_real_petroleo"
                           label="Plan Real"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.porciento_petroleo"
-                          label="%"
+                          label="Porciento"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="6">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-select
                           :items="ueb"
                           v-model="editedItem.ueb"
@@ -107,9 +106,7 @@
                         ></v-select>
                       </v-col>
                     </v-row>
-                  </v-container>
                 </v-card-text>
-
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="red darken-1" outlined @click="close">
@@ -203,6 +200,8 @@
 import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import PizZipUtils from "pizzip/utils/index.js";
+
+import {saveAs} from 'file-saver';
 
 export default {
   props: {

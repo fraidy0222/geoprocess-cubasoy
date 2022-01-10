@@ -19,4 +19,13 @@ class Valores extends Model
     {
         return $this->belongsTo(Cultivo::class);
     }
+    public function general() 
+    {
+        return $this->belongsTo(General::class);
+    }
+
+    public function incidencia_valore() 
+    {
+        return $this->belongsTo(General::class);
+    }
 }

@@ -50,8 +50,8 @@ class SiembraController extends Controller
 
     public function update(Request $request, $id)
     {
-        $ueb = Ueb::where('name', $request->ueb)->first();
-        $cultivo = Cultivo::where('name', $request->cultivo)->first();
+      $ueb = Ueb::where('name', $request->ueb)->first();
+      $cultivo = Cultivo::where('name', $request->cultivo)->first();
       
       $siembra = Siembra::find($id);
       $siembra->ueb()->dissociate($ueb);

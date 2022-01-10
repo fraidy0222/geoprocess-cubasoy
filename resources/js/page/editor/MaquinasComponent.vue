@@ -1,14 +1,14 @@
 <template>
   <div>
-     <v-row class="mb-3">
+    <v-row class="mb-3">
       <v-col>
         <v-card class="mx-auto" :loading="loading">
-           <template slot="progress">
-              <v-progress-linear
-                color="primary"
-                indeterminate
-              ></v-progress-linear>
-            </template>
+          <template slot="progress">
+            <v-progress-linear
+              color="primary"
+              indeterminate
+            ></v-progress-linear>
+          </template>
           <v-list>
             <v-list-item v-for="(t, index) in t" :key="index">
               <v-list-item-content>
@@ -16,22 +16,20 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <v-avatar color="primary">
-                  <span class="white--text text-h6">{{ t.t }}</span>
-                </v-avatar>
+                <h2 class="text-h6">{{ t.t }}</h2>
               </v-list-item-icon>
             </v-list-item>
           </v-list>
         </v-card>
       </v-col>
-       <v-col>
+      <v-col>
         <v-card class="mx-auto" :loading="loading">
           <template slot="progress">
-              <v-progress-linear
-                color="primary"
-                indeterminate
-              ></v-progress-linear>
-            </template>
+            <v-progress-linear
+              color="primary"
+              indeterminate
+            ></v-progress-linear>
+          </template>
           <v-list>
             <v-list-item v-for="(l, index) in l" :key="index">
               <v-list-item-content>
@@ -39,22 +37,20 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <v-avatar color="primary">
-                  <span class="white--text text-h6">{{ l.l }}</span>
-                </v-avatar>
+                 <h2 class="text-h6">{{ l.l }}</h2>
               </v-list-item-icon>
             </v-list-item>
           </v-list>
         </v-card>
       </v-col>
-       <v-col>
+      <v-col>
         <v-card class="mx-auto" :loading="loading">
           <template slot="progress">
-              <v-progress-linear
-                color="primary"
-                indeterminate
-              ></v-progress-linear>
-            </template>
+            <v-progress-linear
+              color="primary"
+              indeterminate
+            ></v-progress-linear>
+          </template>
           <v-list>
             <v-list-item>
               <v-list-item-content>
@@ -62,10 +58,9 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <v-avatar color="primary">
-                  <span class="white--text text-h6">{{ rowTotal('maquinas_rotas')}}</span>
-                  <!-- <span class="white--text text-h6">{{ r.maquinas_rotas }}</span> -->
-                </v-avatar>
+                <h2 class="text-h6">{{
+                    rowTotal("maquinas_rotas")
+                  }}</h2>
               </v-list-item-icon>
             </v-list-item>
           </v-list>
@@ -104,9 +99,9 @@
                 <v-icon>mdi-plus</v-icon>
                 Añadir
               </v-btn>
-              <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
+              <!-- <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
                 Exportar a Word
-              </v-btn>
+              </v-btn> -->
             </template>
             <v-form ref="form" v-model="valid" @submit.prevent="save">
               <v-card>
@@ -116,7 +111,7 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <v-col cols="12" md="6" >
+                      <v-col cols="12" md="6">
                         <v-select
                           :items="ueb"
                           v-model="editedItem.ueb"
@@ -126,37 +121,17 @@
                           append-icon="mdi-chevron-down"
                         ></v-select>
                       </v-col>
-                      <v-col cols="12" md="6" >
-                        <v-select
-                          :items="rotas"
-                          v-model="editedItem.rotas"
-                          label="Selecione una máquina rota"
-                          :rules="Rules"
-                          no-data-text="No hay elementos"
-                          append-icon="mdi-chevron-down"
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12" md="6" >
-                        <v-select
-                          :items="maquina"
-                          v-model="editedItem.maquina"
-                          label="Selecione una maquina"
-                          :rules="Rules"
-                          no-data-text="No hay elementos"
-                          append-icon="mdi-chevron-down"
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12" md="6" >
+                      <v-col cols="12" md="6">
                         <v-text-field
                           v-model="editedItem.total_maquinas_riego"
-                          label="Máquinas de Riego"
+                          label="Total de Máquinas de Riego"
                           required
                           :rules="Rules"
                           type="number"
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" md="6" >
+                      <v-col cols="12" md="6">
                         <v-text-field
                           v-model="editedItem.maquinas_listas"
                           label="Máquinas listas"
@@ -166,17 +141,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="12" md="6" >
-                        <v-textarea
-                          v-model="editedItem.afectaciones"
-                          auto-grow
-                          label="Afectaciones"
-                          required
-                          :rules="Rules"
-                          rows="1"
-                        ></v-textarea>
-                      </v-col>
-                      <!-- <v-col cols="12" md="6" >
+                      <v-col cols="12" md="6">
                         <v-autocomplete
                           v-model="editedItem.maquinas_rotas"
                           :items="options"
@@ -201,22 +166,28 @@
                             </v-chip>
                           </template>
                         </v-autocomplete>
-                      </v-col> -->
-                       
+                      </v-col>
+                      <v-col cols="12" md="6">
+                        <v-textarea
+                          v-model="editedItem.afectaciones"
+                          auto-grow
+                          label="Afectaciones"
+                          required
+                          :rules="Rules"
+                          rows="1"
+                        ></v-textarea>
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                 <v-btn 
-                    color="red darken-1" 
-                    outlined
-                    @click="close">
+                  <v-btn color="red darken-1" outlined @click="close">
                     Cancelar
                   </v-btn>
-                  <v-btn 
+                  <v-btn
                     color="primary"
-                    :disabled="!valid" 
+                    :disabled="!valid"
                     type="submit"
                     @click.prevent="save"
                   >
@@ -227,13 +198,13 @@
             </v-form>
           </v-dialog>
           <v-dialog persistent v-model="dialogDelete" max-width="500px">
-            <v-card >
+            <v-card>
               <v-card-title class="headline"
                 >¿Estás seguro de borrar esta máquina de riego?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn outlined  @click="closeDelete">Cancelar</v-btn>
+                <v-btn outlined @click="closeDelete">Cancelar</v-btn>
                 <v-btn depressed color="error" @click="deleteItemConfirm"
                   >Borrar</v-btn
                 >
@@ -280,7 +251,10 @@
       </template>
     </v-data-table>
     <v-snackbar top v-model="snackbar" :color="snackColor" :timeout="timeout">
-      <v-icon v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"></v-icon>  {{ text }}
+      <v-icon
+        v-bind:class="[icon ? 'mdi-check-circle' : 'mdi-bell-cancel', 'mdi']"
+      ></v-icon>
+      {{ text }}
       <template v-slot:action="{ attrs }">
         <v-btn
           color="white"
@@ -303,7 +277,7 @@ import Docxtemplater from "docxtemplater";
 import PizZip from "pizzip";
 import PizZipUtils from "pizzip/utils/index.js";
 
-import {saveAs} from 'file-saver';
+import { saveAs } from "file-saver";
 export default {
   data: () => ({
     valid: true,
@@ -324,7 +298,7 @@ export default {
     ueb: [],
     maquina: [],
     rotas: [],
-    date: new Date().toISOString().substr(0, 10),
+    date: new Date().toLocaleDateString(),
     headers: [
       {
         text: "ID",
@@ -333,7 +307,7 @@ export default {
         value: "id",
       },
       { text: "UEB", value: "ueb" },
-      { text: "Rotas", value: "maquina_rotas" },
+      { text: "Rotas", value: "maquinas_rotas" },
       { text: "Máquinas de Riego", value: "total_maquinas_riego" },
       { text: "Listas", value: "maquinas_listas" },
       { text: "Afectaciones", value: "afectaciones" },
@@ -345,7 +319,7 @@ export default {
     editedItem: {
       id: "",
       ueb: "",
-      maquina_rotas: "",
+      maquinas_rotas: "",
       total_maquinas_riego: "",
       maquinas_listas: "",
       afectaciones: "",
@@ -353,10 +327,10 @@ export default {
     defaultItem: {
       id: "",
       ueb: "",
-      maquina_rotas: "",
+      maquinas_rotas: "",
       total_maquinas_riego: "",
       maquinas_listas: "",
-      afectaciones: ""
+      afectaciones: "",
     },
   }),
   computed: {
@@ -409,12 +383,12 @@ export default {
         .get("/api/maquinas", {})
         .then((res) => {
           this.maquinas = res.data.maquina;
-          this.ueb = res.data.uebs,
-          this.rotas = res.data.maquina_rota
+          this.ueb = res.data.uebs;
+          // (this.rotas = res.data.maquina_rota);
           this.t = res.data.total,
           this.l = res.data.listas,
-          this.r = res.data.rotas
-         // console.log(res.data.maquina_rota)
+          this.r = res.data.rotas;
+          //console.log(res.data.uebs)
         })
         .catch((err) => {
           if (err.response.status == 401) {
@@ -442,17 +416,17 @@ export default {
         .then((res) => {
           this.maquinas.splice(this.editedIndex, 1);
           (this.snackbar = true),
-          (this.text = "Maquina de reigo eliminada"),
-          (this.snackColor = "success");
-          this.icon = true
-          this.initialize()
+            (this.text = "Maquina de reigo eliminada"),
+            (this.snackColor = "success");
+          this.icon = true;
+          this.initialize();
         })
         .catch((err) => {
           (this.snackbar = true),
             (this.text = "Ha occurido un error"),
             (this.snackColor = "error");
-            this.icon = false
-         // console.log(err.response);
+          this.icon = false;
+          // console.log(err.response);
         });
       this.closeDelete();
     },
@@ -479,33 +453,33 @@ export default {
           .put("/api/maquinas/" + this.editedItem.id, this.editedItem)
           .then((res) => {
             this.initialize();
-            this.snackbar = true,
-            this.text = "Maquina de riego editada",
-            this.snackColor = "success";
-            this.icon = true
+            (this.snackbar = true),
+              (this.text = "Maquina de riego editada"),
+              (this.snackColor = "success");
+            this.icon = true;
           })
           .catch((err) => {
-            this.snackbar = true,
-            this.text = "Ha occurido un error",
-            this.snackColor = "error";
-            this.icon = false
+            (this.snackbar = true),
+              (this.text = "Ha occurido un error"),
+              (this.snackColor = "error");
+            this.icon = false;
           });
       } else {
         axios
           .post("/api/maquinas", this.editedItem)
           .then((res) => {
             this.maquinas.push(res.data.maquina);
-            this.initialize()
-            this.snackbar = true,
-            this.text = "Maquina de riego añadida",
-            this.snackColor = "success";
-            this.icon = true
+            this.initialize();
+            (this.snackbar = true),
+              (this.text = "Maquina de riego añadida"),
+              (this.snackColor = "success");
+            this.icon = true;
           })
-          .catch(err => {
-            this.snackbar = true,
-            this.text = "Ha occurido un error",
-            this.snackColor = "error";
-            this.icon = false
+          .catch((err) => {
+            (this.snackbar = true),
+              (this.text = "Ha occurido un error"),
+              (this.snackColor = "error");
+            this.icon = false;
           });
       }
       this.close();
@@ -515,7 +489,7 @@ export default {
         this.options.push(`${index}`);
       }
     },
-     rowTotal(base) {
+    rowTotal(base) {
       return this.maquinas.reduce((sum, cur) => (sum += cur[base].length), 0);
     },
     loadFile(url, callback) {
@@ -525,17 +499,18 @@ export default {
       let maquina = this.maquinas;
       let t = this.t;
       let l = this.l;
-      this.loadFile("/documentos/maquinas.docx", function(
-        error,
-        content
-      ) {
+      let date = this.date
+      this.loadFile("/documentos/maquinas.docx", function (error, content) {
         if (error) {
           throw error;
         }
         const zip = new PizZip(content);
-        const doc = new Docxtemplater(zip, { paragraphLoop: true, linebreaks: true });
-        doc.setData({ maquina, t, l });
-        console.log(doc)
+        const doc = new Docxtemplater(zip, {
+          paragraphLoop: true,
+          linebreaks: true,
+        });
+        doc.setData({ maquina, t, l, date });
+        console.log(doc);
         try {
           // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
           doc.render();
@@ -543,7 +518,7 @@ export default {
           // The error thrown here contains additional information when logged with JSON.stringify (it contains a properties object containing all suberrors).
           function replaceErrors(key, value) {
             if (value instanceof Error) {
-              return Object.getOwnPropertyNames(value).reduce(function(
+              return Object.getOwnPropertyNames(value).reduce(function (
                 error,
                 key
               ) {
@@ -558,7 +533,7 @@ export default {
 
           if (error.properties && error.properties.errors instanceof Array) {
             const errorMessages = error.properties.errors
-              .map(function(error) {
+              .map(function (error) {
                 return error.properties.explanation;
               })
               .join("\n");
@@ -571,7 +546,7 @@ export default {
         const out = doc.getZip().generate({
           type: "blob",
           mimeType:
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         });
         // Output the document using Data-URI
         saveAs(out, "maquinas.docx");

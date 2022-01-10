@@ -19,4 +19,14 @@ class Energia extends Model
     {
         return $this->belongsTo(Ueb::class);
     }
+
+    public function general() 
+    {
+        return $this->belongsTo(General::class);
+    }
+    
+    public function incidencia_energia ()
+    {
+        return $this->hasMany(IncidenciaEnergia::class);
+    }
 }

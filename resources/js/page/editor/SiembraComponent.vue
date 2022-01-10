@@ -16,80 +16,6 @@
         'items-per-page-text': 'Siembra por páginas',
       }"
     >
-      <!-- <template v-slot:header>
-        <thead>
-          <tr>
-            <th>Granja Productora</th>
-            <th>C/C</th>
-            <th>Cultivo</th>
-            <th>Area</th>
-            <th colspan="3" class="text-center">Siembra</th>
-            <th colspan="2" class="text-center">Semilla</th>
-            <th colspan="2">Cant.Fertili</th>
-            <th >Opciones</th>
-          </tr>
-          <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th>Real</th>
-            <th>Plan</th>
-            <th>Acum</th>
-            <th>Diaria</th>
-            <th>Acum</th>
-            <th>Diaria</th>
-            <th>Acum</th>
-            <th></th>
-          </tr>
-        </thead>
-      </template> -->
-    <!-- <template v-slot:body="{ items }">
-      <tbody>
-        <tr
-          v-for="item in items"
-          :key="item.id"
-        >
-          <td>{{ item.ueb }}</td>
-          <td>{{item.cc}}</td>
-          <td>{{item.cultivo}}</td>
-          <td>{{item.area}}</td>
-          <td>{{item.siembrap}}</td>
-          <td>{{item.siembraa}}</td>
-          <td>{{item.siembrad}}</td>
-          <td>{{item.cantsemillad}}</td>
-          <td>{{item.cantsemillaa}}</td>
-          <td>{{item.cantsemillaud}}</td>
-          <td>{{item.cantsemillaua}}</td>
-           <td>
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-bind="attrs" v-on="on" icon>
-                    <v-icon
-                      color="warning"
-                      class="mr-2"
-                      @click="editItem(item)"
-                    >
-                      mdi-pencil
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Editar</span>
-              </v-tooltip>
-              <v-tooltip bottom>
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn v-bind="attrs" v-on="on" icon>
-                    <v-icon color="error" @click="deleteItem(item)">
-                      mdi-delete
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Eliminar</span>
-              </v-tooltip>
-            </td>
-        </tr>
-      </tbody>
-    </template> -->
      <template v-slot:top class="mb-5">
         <v-toolbar flat>
           <v-toolbar-title>Siembra</v-toolbar-title>
@@ -101,9 +27,9 @@
                 <v-icon>mdi-plus</v-icon>
                 Añadir
               </v-btn>
-              <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
+              <!-- <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
                 Exportar a Word
-              </v-btn>
+              </v-btn> -->
             </template>
             <v-card>
               <v-card-title>
@@ -337,6 +263,7 @@ export default {
     a: [],
     c: [],
     datos: [],
+    date: new Date().toLocaleDateString(),
     rules: {
       required: (v) => !!v || "Este campo es requerido",
     },
@@ -531,6 +458,7 @@ export default {
     },
     renderDoc() {
       let s = this.siembra;
+      let date = this.date
       this.loadFile("/documentos/siembra.docx", function (error, content) {
         if (error) {
           throw error;
@@ -540,7 +468,7 @@ export default {
           paragraphLoop: true,
           linebreaks: true,
         });
-        doc.setData({ s,});
+        doc.setData({ s, date});
         try {
           // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
           doc.render();
