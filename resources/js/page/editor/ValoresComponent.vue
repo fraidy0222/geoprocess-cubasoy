@@ -17,7 +17,7 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <v-chip class="ma-2">{{ c.diaria }}</v-chip>
+                <h2>{{ c.diaria }}</h2>
               </v-list-item-icon>
             </v-list-item>
           </v-list>
@@ -39,7 +39,7 @@
               </v-list-item-content>
 
               <v-list-item-icon>
-                <v-chip class="ma-2">{{ c.acumu }}</v-chip>
+                <h2>{{ c.acumu }}</h2>
               </v-list-item-icon>
             </v-list-item>
           </v-list>
@@ -73,9 +73,9 @@
                 <v-icon>mdi-plus</v-icon>
                 Añadir
               </v-btn>
-               <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
+               <!-- <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
                 Exportar a Word
-              </v-btn>
+              </v-btn> -->
             </template>
             <v-card>
               <v-card-title>
@@ -286,7 +286,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "Nueva ausencia" : "Editar ausencia";
+      return this.editedIndex === -1 ? "Nuevo valores" : "Editar valores";
     },
   },
 

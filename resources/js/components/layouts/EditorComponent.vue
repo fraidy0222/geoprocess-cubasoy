@@ -139,12 +139,12 @@ export default {
     drawer: null,
     items: [
       { text: "UEB ", icon: "mdi-city", action: "/editor/ueb" },
-      { text: "Reporte General", icon: "mdi-clipboard-text-outline" },
+      { text: "Reporte General", icon: "mdi-clipboard-text-outline", action:"/editor/general" },
       { text: "Productos", icon: "mdi-store-outline", action: "/editor/productos"},
       {
-        text: "Diario",
+        text: "Diario Siembra",
         icon: "mdi-clock-outline",
-        // action: "/editor/users",
+        action: "/editor/diario",
       },
     ],
     gestion: [
@@ -179,9 +179,33 @@ export default {
         icon: "mdi-fuel",
         action: "/editor/energia_combustible",
       },
+      {
+        text: "Cosechas",
+        icon: "mdi-forklift",
+        action: "/editor/cosechas",
+      },
+      {
+        text: "Culturales",
+        icon: "mdi-content-cut",
+        action: "/editor/culturales",
+      },
+      {
+        text: "Tierra",
+        icon: "mdi-earth",
+        action: "/editor/tierra",
+      },
     ],
     reportes: [
-      { text: "Siembra ", icon: "mdi-tractor", action: "/editor/incidencias_siembra" },
+      { text: "Siembra", icon: "mdi-tractor", action: "/editor/incidencias_siembra" },
+      { text: "Máquinas de Reigo", icon: "mdi-watering-can-outline", action: "/editor/incidencias_maquina" },
+      { text: "Químicos", icon: "mdi-flask-empty-outline", action: "/editor/incidencias_quimicos" },
+      { text: "Ausencias", icon: "mdi-account-multiple-check-outline", action: "/editor/incidencias_ausencia" },
+      { text: "Valores", icon: "mdi-cash-usd-outline", action: "/editor/incidencias_valores" },
+      { text: "Toneladas", icon: "mdi-scale", action: "/editor/incidencias_tonelada" },
+      { text: "Energia-Combustible", icon: "mdi-fuel", action: "/editor/incidencias_energia" },
+      { text: "Cosecha", icon: "mdi-forklift", action: "/editor/incidencias_cosecha" },
+      { text: "Culturales", icon: "mdi-content-cut", action: "/editor/incidencias_culturale" },
+      { text: "Tierra", icon: "mdi-earth", action: "/editor/incidencias_tierra" },
     ]
   }),
   // mounted() {

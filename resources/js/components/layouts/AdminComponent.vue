@@ -31,7 +31,7 @@
     <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        <router-link :to="{ name: 'home' }" class="nombre"
+        <router-link :to="{ path: 'inicio' }" class="nombre"
           >GeoProcess</router-link
         >
       </v-toolbar-title>
@@ -98,14 +98,16 @@ export default {
     ],
   }),
   // mounted() {
-  //   if (localStorage.getItem('role')) {
-  //     try {
-  //       this.cats = JSON.parse(localStorage.getItem('cats'));
-  //     } catch(e) {
-  //       localStorage.removeItem('cats');
-  //     }
+  //   role: () => {
+  //     const role = '';
+  //     return  role = localStorage.getItem('role');
+  //     console.log(role);
   //   }
   // },
+
+  created() {
+    return window.localStorage.getItem('role');
+  },
   // mounted() {
   //   const theme = localStorage.getItem("dark_theme");
   //   if (theme) {

@@ -11,7 +11,6 @@ class Maquinas extends Model
         'maquinas_listas',
         'afectaciones',
         'ueb_id',
-        
     ];
 
     protected $casts = [
@@ -22,5 +21,10 @@ class Maquinas extends Model
     public function ueb ()
     {
         return $this->belongsTo(Ueb::class);
+    }
+
+    public function incidencia_maquina() 
+    {
+     return $this->hasMany(IncidenciaMaquina::class);
     }
 }

@@ -8,35 +8,17 @@
       :loading="loading"
       disable-sort
       loading-text="Cargando... Por favor espere"
-      :items="siembra"
+      :items="quimicos"
       :headers="headers"
       :items-per-page="10"
       :footer-props="{
         'items-per-page-options': [10, 15, 20],
-        'items-per-page-text': 'Siembra por páginas',
+        'items-per-page-text': 'Incidencias por páginas',
       }"
     >
-     <!-- <template
-        v-slot:body
-      >
-        <tbody>
-          <tr
-            v-for="item in ueb"
-            :key="item.name"
-          >
-            <td>{{ item }}</td>
-            <tr
-            v-for="item in cc"
-            :key="item.name"
-          >
-            <td>{{ item }}</td>
-          </tr>
-          </tr>
-        </tbody>
-      </template> -->
      <template v-slot:top class="mb-5">
         <v-toolbar flat>
-          <v-toolbar-title>Incidencias Siembra</v-toolbar-title>
+          <v-toolbar-title>Incidencias Químicos</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog persistent v-model="dialog" max-width="1000px">
@@ -44,6 +26,9 @@
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
                 <v-icon>mdi-plus</v-icon>
                 Añadir
+              </v-btn>
+              <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
+                Exportar a Word
               </v-btn>
             </template>
             <v-card>
@@ -67,16 +52,6 @@
                     </v-col>
                     <v-col cols="6">
                       <v-select
-                        :items="cultivo"
-                        v-model="editedItem.cultivo"
-                        label="Cultivo"
-                        :rules="[rules.required]"
-                        no-data-text="No hay elementos"
-                        append-icon="mdi-chevron-down"
-                      ></v-select>
-                    </v-col>
-                    <v-col cols="6">
-                      <v-select
                         :items="cc"
                         v-model="editedItem.cc"
                         label="C/C"
@@ -87,9 +62,9 @@
                     </v-col>
                     <v-col cols="6">
                       <v-select
-                        :items="area"
-                        v-model="editedItem.area"
-                        label="Área"
+                        :items="tipo_aplicacion"
+                        v-model="editedItem.tipo_aplicacion"
+                        label="Tipo de aplicación"
                         :rules="[rules.required]"
                         no-data-text="No hay elementos"
                         append-icon="mdi-chevron-down"
@@ -97,9 +72,9 @@
                     </v-col>
                     <v-col cols="6">
                       <v-select
-                        :items="siembrap"
-                        v-model="editedItem.siembrap"
-                        label="Siembra Plan"
+                        :items="tipo_producto"
+                        v-model="editedItem.tipo_producto"
+                        label="Tipo de producto"
                         :rules="[rules.required]"
                         no-data-text="No hay elementos"
                         append-icon="mdi-chevron-down"
@@ -107,29 +82,9 @@
                     </v-col>
                     <v-col cols="6">
                        <v-select
-                        :items="siembraa"
-                        v-model="editedItem.siembraa"
-                        label="Siembra Acum"
-                        :rules="[rules.required]"
-                        no-data-text="No hay elementos"
-                        append-icon="mdi-chevron-down"
-                      ></v-select>
-                    </v-col>
-                    <v-col cols="6">
-                      <v-select
-                        :items="siembrad"
-                        v-model="editedItem.siembrad"
-                        label="Siembra Diario"
-                        :rules="[rules.required]"
-                        no-data-text="No hay elementos"
-                        append-icon="mdi-chevron-down"
-                      ></v-select>
-                    </v-col>
-                    <v-col cols="6">
-                       <v-select
-                        :items="cantsemillad"
-                        v-model="editedItem.cantsemillad"
-                        label="Cantidad de Semillas Diario"
+                        :items="cant"
+                        v-model="editedItem.cant"
+                        label="Cantidad"
                         :rules="[rules.required]"
                         no-data-text="No hay elementos"
                         append-icon="mdi-chevron-down"
@@ -137,9 +92,9 @@
                     </v-col>
                      <v-col cols="6">
                        <v-select
-                        :items="cantsemillaa"
-                        v-model="editedItem.cantsemillaa"
-                        label="Cantidad de Semillas Acumulado"
+                        :items="cant"
+                        v-model="editedItem.cant_equipos"
+                        label="Cantidad de equipos"
                         :rules="[rules.required]"
                         no-data-text="No hay elementos"
                         append-icon="mdi-chevron-down"
@@ -147,19 +102,19 @@
                     </v-col>
                      <v-col cols="6">
                        <v-select
-                        :items="cantsemillaud"
-                        v-model="editedItem.cantsemillaud"
-                        label="Cantidad de Semillas Utilizado"
+                        :items="area_aplicada"
+                        v-model="editedItem.area_aplicada"
+                        label="Área aplicada"
                         :rules="[rules.required]"
                         no-data-text="No hay elementos"
                         append-icon="mdi-chevron-down"
                       ></v-select>
                     </v-col>
-                    <v-col cols="6">
+                     <v-col cols="6">
                        <v-select
-                        :items="cantsemillaua"
-                        v-model="editedItem.cantsemillaua"
-                        label="Cantidad de Semillas Acumulado"
+                        :items="area_acum"
+                        v-model="editedItem.area_acum"
+                        label="Área Acumulada"
                         :rules="[rules.required]"
                         no-data-text="No hay elementos"
                         append-icon="mdi-chevron-down"
@@ -256,16 +211,14 @@ export default {
     snackColor: "",
     timeout: 2000,
     ueb: [],
-    cultivo: [],
     cc: [],
-    area: [],
-    siembrap: [],
-    siembraa: [],
-    siembrad: [],
-    cantsemillad: [],
-    cantsemillaa: [],
-    cantsemillaud: [],
-    cantsemillaua: [],
+    tipo_aplicacion: [],
+    tipo_producto: [],
+    cant: [],
+    cant_equipos: [],
+    area_aplicada: [],
+    area_acum: [],
+    date: new Date().toLocaleDateString(),
     rules: {
       required: (v) => !!v || "Este campo es requerido",
     },
@@ -277,52 +230,43 @@ export default {
         value: "ueb",
       },
       { text: "C/C", value: "cc"},
-      { text: "Cultivo", value: "cultivo" },
-      { text: "Área", value: "area" },
-      { text: "Siembra Plan", value: "siembrap" },
-      { text: "Siembra Acum", value: "siembraa" },
-      { text: "Siembra Diario", value: "siembrad" },
-      { text: "Cant Semilla Diario", value: "cantsemillad" },
-      { text: "Cant Semilla Acum", value: "cantsemillaa" },
-      { text: "Cant Fertil Utili Diario", value: "cantsemillaud" },
-      { text: "Cant Fertil Utili Acum", value: "cantsemillaua" },
+      { text: "Tipo de Aplicación", value: "tipo_aplicacion" },
+      { text: "tipo de Producto", value: "tipo_producto" },
+      { text: "Cant", value: "cant" },
+      { text: "Cantidad de equipos", value: "cant_equipos" },
+      { text: "Área Aplicada", value: "area_aplicada" },
+      { text: "Área Acum", value: "area_acum" },
       { text: "Acciones", value: "actions", sortable: false },
     ],
-    siembra: [],
+    quimicos: [],
     editedIndex: -1,
     editedItem: {
       id: "",
       ueb: "",
-      cultivo: "",
       cc: "",
-      area: "",
-      siembrap: "",
-      siembraa: "",
-      siembrad: "",
-      cantsemillad: "",
-      cantsemillaa: "",
-      cantsemillaud: "",
-      cantsemillaua: "",
+      tipo_aplicacion: "",
+      tipo_producto: "",
+      cant: "",
+      cant_equipos: "",
+      area_aplicada: "",
+      area_acum: "",
     },
     defaultItem: {
       id: "",
       ueb: "",
-      cultivo: "",
       cc: "",
-      area: "",
-      siembrap: "",
-      siembraa: "",
-      siembrad: "",
-      cantsemillad: "",
-      cantsemillaa: "",
-      cantsemillaud: "",
-      cantsemillaua: "",
+      tipo_aplicacion: "",
+      tipo_producto: "",
+      cant: "",
+      cant_equipos: "",
+      area_aplicada: "",
+      area_acum: "",
     },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "Nuevo Incidencia de Siembra" : "Editar Incidencia de Siembra";
+      return this.editedIndex === -1 ? "Nuevo Incidencia de químicos" : "Editar Incidencia de químicos";
     },
   },
 
@@ -364,44 +308,41 @@ export default {
         }
       );
       axios
-        .get("/api/incidencias_siembra", {})
+        .get("/api/incidencias_quimicos", {})
         .then((res) => {
-          this.siembra = res.data.siembra;
-          console.log(res.data.siembra)
-          this.ueb = res.data.ueb;
-          this.cultivo = res.data.cultivo; 
-          this.cc = res.data.cc
-          this.area = res.data.area
-          this.siembrap = res.data.siembrap
-          this.siembraa = res.data.siembraa
-          this.siembrad = res.data.siembrad
-          this.cantsemillad = res.data.cantsemillad
-          this.cantsemillaa = res.data.cantsemillaa
-          this.cantsemillaud = res.data.cantsemillaud
-          this.cantsemillaua = res.data.cantsemillaua
+          this.quimicos = res.data.quimicos;
+          this.ueb = res.data.ueb
+          this.cc = res.data.cc;
+          this.tipo_aplicacion = res.data.tipo_aplicacion; 
+          this.tipo_producto = res.data.tipo_producto
+          this.cant = res.data.cant
+          this.cant_equipos = res.data.cant_equipos
+          this.area_aplicada = res.data.area_aplicada
+          this.area_acum = res.data.area_acum
+         // console.log(res.data.quimicos)
         })
         .catch((err) => console.log(err));
     },
 
     editItem(item) {
-      this.editedIndex = this.siembra.indexOf(item);
+      this.editedIndex = this.quimicos.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      this.editedIndex = this.siembra.indexOf(item);
+      this.editedIndex = this.quimicos.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialogDelete = true;
     },
 
     // deleteItemConfirm() {
     //   axios
-    //     .delete("/api/siembra/" + this.editedItem.id)
+    //     .delete("/api/quimicos/" + this.editedItem.id)
     //     .then((res) => {
-    //       this.siembra.splice(this.editedIndex, 1);
+    //       this.quimicos.splice(this.editedIndex, 1);
     //       this.snackbar = true,
-    //       this.text = "Siembra eliminado",
+    //       this.text = "quimicos eliminado",
     //       this.snackColor = "success";
     //       this.initialize()
     //     })
@@ -431,12 +372,13 @@ export default {
     save() {
       if (this.editedIndex > -1) {
         axios
-          .put("/api/incidencias_siembra/" + this.editedItem.id, this.editedItem)
+          .put("/api/incidencias_quimicos/" + this.editedItem.id, this.editedItem)
           .then((res) => {
             this.initialize();
             this.snackbar = true,
-            this.text = "Incidencia de Siembra editada",
+            this.text = "Incidencia de químicos editada",
             this.snackColor = "success";
+            //console.log(res)
           })
           .catch((err) => {
             this.snackbar = true,
@@ -445,14 +387,14 @@ export default {
           });
       } else {
         axios
-          .post("/api/incidencias_siembra",  this.editedItem)
+          .post("/api/incidencias_quimicos",  this.editedItem)
           .then((res) => {
-            this.siembra.push(res.data.incidencia_siembra)
+            this.quimicos.push(res.data.incidencia_quimicos)
             this.snackbar = true,
-            this.text = "Incidencia de Siembra añadida",
+            this.text = "Incidencia de químicos añadida",
             this.snackColor = "success";
             this.initialize()
-            console.log(res)
+           // console.log(res)
           })
           .catch((err) => {
             console.log(err)
@@ -467,8 +409,9 @@ export default {
       PizZipUtils.getBinaryContent(url, callback);
     },
     renderDoc() {
-      let s = this.siembra;
-      this.loadFile("/documentos/siembra.docx", function (error, content) {
+      let quimicos = this.quimicos;
+      let date = this.date
+      this.loadFile("/documentos/quimicos.docx", function (error, content) {
         if (error) {
           throw error;
         }
@@ -477,7 +420,8 @@ export default {
           paragraphLoop: true,
           linebreaks: true,
         });
-        doc.setData({ s,});
+        doc.setData({ quimicos, date});
+        console.log(doc)
         try {
           // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
           doc.render();
@@ -516,7 +460,7 @@ export default {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         });
         // Output the document using Data-URI
-        saveAs(out, "siembra.docx");
+        saveAs(out, "quimicos.docx");
       });
     },
   },

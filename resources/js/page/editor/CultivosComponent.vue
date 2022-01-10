@@ -18,7 +18,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Producto</v-toolbar-title>
+          <v-toolbar-title>Productos</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog persistent v-model="dialog" width="500px">
@@ -39,7 +39,7 @@
                       <v-col cols="12">
                         <v-text-field
                           v-model="editedItem.name"
-                          label="Nombre"
+                          label="Nombre del producto"
                           required
                           :rules="Rules"
                         ></v-text-field>
@@ -71,7 +71,7 @@
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card >
               <v-card-title class="headline"
-                >¿Estás seguro de borrar este cultivo?</v-card-title
+                >¿Estás seguro de borrar este producto?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -183,7 +183,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "Nuevo Cultivo" : "Editar Cultivo";
+      return this.editedIndex === -1 ? "Nuevo Producto" : "Editar Producto";
     },
   },
 
@@ -250,7 +250,7 @@ export default {
         .then((res) => {
           this.cultivos.splice(this.editedIndex, 1);
           (this.snackbar = true),
-            (this.text = "Cultivo eliminado"),
+            (this.text = "Producto eliminado"),
             (this.snackColor = "success");
             this.icon = true
         })
@@ -289,7 +289,7 @@ export default {
           .then((res) => {
             this.initialize();
             this.snackbar = true,
-            this.text = "Cultivo editado",
+            this.text = "Producto editado",
             this.snackColor = "success";
             this.icon = true
           })
@@ -307,7 +307,7 @@ export default {
           .then((res) => {
             this.cultivos.push(res.data.cultivo);
             this.snackbar = true,
-            this.text = "Cultivo añadido",
+            this.text = "Producto añadido",
             this.snackColor = "success";
             this.icon = true
           })

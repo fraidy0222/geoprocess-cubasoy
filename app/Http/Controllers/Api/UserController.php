@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\User;
 use App\Role;
 use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Str;
-use App\Http\Resources\User as UserResource;
-use Illuminate\Support\Facades\Storage;
+
 
 class UserController extends Controller
 {
@@ -40,10 +40,7 @@ class UserController extends Controller
 
   public function update(Request $request, $id)
   {
-    $role = Role::where('name', $request->role)->first();
     $user = User::find($id);
-    $user->role()->dissociate($role);
-    $user->role()->associate($role);
     $user->name = $request->name;
     $user->email = $request->email;
     $user->password = bcrypt($request->password);

@@ -117,6 +117,21 @@ export default {
         icon: "mdi-fuel",
         action: "/usuario_ueb/energia_combustible",
       },
+      {
+        text: "Cosechas",
+        icon: "mdi-forklift",
+        action: "/usuario_ueb/cosechas",
+      },
+      {
+        text: "Culturales",
+        icon: "mdi-content-cut",
+        action: "/usuario_ueb/culturales",
+      },
+      {
+        text: "Tierra",
+        icon: "mdi-earth",
+        action: "/usuario_ueb/tierra",
+      },
     ],
   }),
   // mounted() {

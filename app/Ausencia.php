@@ -23,5 +23,10 @@ class Ausencia extends Model
     {
         return $this->belongsTo(Ueb::class);
     }
+
+    public function incidencia_ausencia()
+    {
+        return $this->belongsTo(IncidenciaAusencia::class);
+    }
 }
 

@@ -11,27 +11,44 @@ const Login = () => import("./page/LoginComponent")
 const Admin = () => import("./components/layouts/AdminComponent")
 const Roles = () => import("./page/admin/RolesComponent")
 const Ueb = () => import("./page/editor/UebComponent")
-const Productos = () => import("./page/editor/CultivosComponent")
-const Ausencia = () => import("./page/editor/AusenciasComponent")
 const User = () => import("./page/admin/UserComponent")
 const Test = () => import("./page/Test")
-const Quimicos = () => import("./page/editor/QuimicosComponent")
-const Valores = () => import("./page/editor/ValoresComponent")
-const Toneladas = () => import("./page/editor/ToneladasComponent")
 const NotFound = () => import("./page/NotFoundComponent")
-const Energia = () => import("./page/editor/EnergiaComponent")
-const Maquinas = () => import("./page/editor/MaquinasComponent")
-const Siembra = () => import("./page/editor/SiembraComponent")
+
 const Principal = () => import("./page/admin/PrincipalComponent")
 const NoAutorizado = () => import("./page/NoAutorizadoComponent")
 
 // rol editor
+const HomeEditor = () => import("./page/editor/HomeComponent");
 const Editor = () => import("./components/layouts/EditorComponent");
-const IncidenciaSiembra = () => import('./page/editor/IncidenciasSiembraComponent');
+const Energia = () => import("./page/editor/EnergiaComponent");
+const Maquinas = () => import("./page/editor/MaquinasComponent");
+const Siembra = () => import("./page/editor/SiembraComponent");
+const Quimicos = () => import("./page/editor/QuimicosComponent");
+const Valores = () => import("./page/editor/ValoresComponent");
+const Toneladas = () => import("./page/editor/ToneladasComponent");
+const Productos = () => import("./page/editor/CultivosComponent");
+const Ausencia = () => import("./page/editor/AusenciasComponent");
+const Cosechas = () => import("./page/editor/CosechasComponent");
+const Culturales = () => import('./page/editor/CulturalesComponent.vue');
+const Tierra = () => import('./page/editor/TierraComponent.vue');
+const General = () => import('./page/editor/GeneralComponent.vue');
+const Diario = () => import('./page/editor/DiarioComponent.vue');
+
+// rol editor // incidencias
+const IncidenciaSiembra = () => import('./page/editor/Incidencias/IncidenciasSiembraComponent');
+const IncidenciaMaquinas = () => import('./page/editor/Incidencias/IncidenciasMaquinaComponent');
+const IncidenciaQuimicos = () => import('./page/editor/Incidencias/IncidenciasQuimicosComponent');
+const IncidenciaAusencia = () => import('./page/editor/Incidencias/IncidenciasAusenciaComponent');
+const IncidenciaValore = () => import('./page/editor/Incidencias/IncidenciasValoreComponent');
+const IncidenciaTonelada = () => import('./page/editor/Incidencias/IncidenciasToneladaComponent');
+const IncidenciaEnergia = () => import('./page/editor/Incidencias/IncidenciasEnergiaComponent');
+const IncidenciaCosecha= () => import('./page/editor/Incidencias/IncidenciasCosechaComponent');
+const IncidenciaCulturale= () => import('./page/editor/Incidencias/IncidenciasCulturaleComponent');
+const IncidenciaTierra= () => import('./page/editor/Incidencias/IncidenciasTierraComponent');
 
 // rol usuario ueb
 const UsuarioUeb = () => import("./components/layouts/UsuarioUebComponent")
-const General = () => import("./page/usuario_ueb/ReporteGeneralComponent")
 
 import NProgress from "nprogress/nprogress.js"
 import "nprogress/nprogress.css"
@@ -71,20 +88,19 @@ const routes = [
     component: Test,
     name: "Test",
     beforeEnter: verify,
-    // meta: { middleware: [editor] },
   },
 
   // admin
   {
     path: "/admin",
     component: Admin,
-    // meta: { middleware: [admin] },
-    redirect: "/admin/home",
+    beforeEnter: verify,
+    redirect: "/admin/inicio",
     children: [
       {
-        path: "home",
+        path: "inicio",
         component: Principal,
-        name: "home",
+        name: "inicio",
       },
       {
         path: "usuarios",
@@ -97,17 +113,22 @@ const routes = [
         name: "Roles",
       },
     ],
-    beforeEnter: verify,
+    meta: { middleware: [admin] },
   },
 
   // editor 
   {
     path: '/editor',
     component: Editor,
-    // meta: { middleware: [editor] },
+    meta: { middleware: [editor] },
     name: 'Editor',
-    // redirect: "/editor/home",
+    redirect: "/editor/inicio",
     children: [
+      {
+        path: 'inicio',
+        component: HomeEditor,
+        name: 'home'
+      },
       {
         path: "maquinas_riego",
         component: Maquinas,
@@ -150,16 +171,86 @@ const routes = [
         name: "Energia",
       },
       {
+        path: "cosechas",
+        component: Cosechas,
+        name: "Cosecha",
+      },
+      {
         path: "siembra",
         component: Siembra,
         name: "Siembra",
+      },
+      {
+        path: "culturales",
+        component: Culturales,
+        name: "Culturales",
+      },
+      {
+        path: "tierra",
+        component: Tierra,
+        name: "Tierra",
+      },
+      {
+        path: "general",
+        component: General,
+        name: "General",
+      },
+      {
+        path: 'diario',
+        component: Diario,
+        name: 'Diario'
       },
       // incidencias
       {
         path: "incidencias_siembra",
         component: IncidenciaSiembra,
         name: 'Incidencia Siembra'
-      }
+      },
+      {
+        path: "incidencias_maquina",
+        component: IncidenciaMaquinas,
+        name: 'Incidencia Maquinas'
+      },
+      {
+        path: "incidencias_quimicos",
+        component: IncidenciaQuimicos,
+        name: 'Incidencia Quimicos'
+      },
+      {
+        path: "incidencias_ausencia",
+        component: IncidenciaAusencia,
+        name: 'Incidencia Ausencia'
+      },
+      {
+        path: "incidencias_valores",
+        component: IncidenciaValore,
+        name: 'Incidencia Valore'
+      },
+      {
+        path: "incidencias_tonelada",
+        component: IncidenciaTonelada,
+        name: 'Incidencia Tonelada'
+      },
+      {
+        path: "incidencias_energia",
+        component: IncidenciaEnergia,
+        name: 'Incidencia Energia'
+      },
+      {
+        path: "incidencias_cosecha",
+        component: IncidenciaCosecha,
+        name: 'Incidencia Cosecha'
+      },
+      {
+        path: "incidencias_culturale",
+        component: IncidenciaCulturale,
+        name: 'Incidencia Culturale'
+      },
+      {
+        path: "incidencias_tierra",
+        component: IncidenciaTierra,
+        name: 'Incidencia Tierra'
+      },
     ],
     beforeEnter: verify,
   },
@@ -169,7 +260,8 @@ const routes = [
     path: '/usuario_ueb',
     component: UsuarioUeb,
     name: 'UsuarioUeb',
-    // meta: { middleware: [usuario_ueb] },
+    beforeEnter: verify,
+    meta: { middleware: [usuario_ueb] },
     children: [
       {
         path: "maquinas_riego",
@@ -206,8 +298,29 @@ const routes = [
         component: Siembra,
         name: "Generar Incidencia Siembra",
       },
+      {
+        path: "cosechas",
+        component: Cosechas,
+        name: "Cosechas",
+      },
+      {
+        path: "culturales",
+        component: Culturales,
+        name: "Culturale",
+      },
+       {
+        path: "tierra",
+        component: Tierra,
+        name: "Tierras",
+      },
+      
+      {
+        path: 'diario',
+        component: Diario,
+        name: 'Diarios'
+      }
     ],
-    beforeEnter: verify,
+    
   }
 ]
 

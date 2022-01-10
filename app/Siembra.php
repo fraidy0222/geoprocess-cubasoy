@@ -34,5 +34,9 @@ class Siembra extends Model
     {
      return $this->hasMany(IncidenciaSiembra::class);
     }
+    public function general() 
+    {
+        return $this->belongsTo(General::class);
+    }
     
 }

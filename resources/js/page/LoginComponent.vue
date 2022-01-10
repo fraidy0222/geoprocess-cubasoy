@@ -12,7 +12,7 @@
               @submit.prevent="login"
             >
               <v-text-field
-                v-model="nameUser"
+                v-model="nameUser" 
                 required
                 label="Usuario"
                 name="email"
@@ -129,9 +129,9 @@ export default {
         .then((res) => {
           localStorage.setItem("token", res.data.user.api_token);
           this.$store.commit("login", res.data.user);
-          localStorage.setItem("role", res.data.user.role.name);
+          // localStorage.setItem("role", res.data.user.role.name);
           if (res.data.user.role.name == "Administrador") {
-            this.$router.push("/admin/home");
+            this.$router.push("/admin/inicio");
           } else if (res.data.user.role.name == "Editor") {
             this.$router
               .push("/editor")

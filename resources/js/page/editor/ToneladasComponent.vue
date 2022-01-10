@@ -90,9 +90,9 @@
                 <v-icon>mdi-plus</v-icon>
                 Añadir
               </v-btn>
-               <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
+               <!-- <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
                 Exportar a Word
-              </v-btn>
+              </v-btn> -->
             </template>
             <v-card>
               <v-card-title>
@@ -102,7 +102,7 @@
                 <v-card-text>
                   <v-container>
                     <v-row>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-select
                           :items="cultivos"
                           v-model="editedItem.cultivo"
@@ -114,7 +114,7 @@
                           append-icon="mdi-chevron-down"
                         ></v-select>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.venta_d"
                           label="Ventas diarias"
@@ -122,7 +122,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.acum_mes"
                           label="Acumulado del mes"
@@ -131,7 +131,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.acum_fecha"
                           label="Acum hasta la fecha"
@@ -140,7 +140,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                       <v-col cols="4">
+                       <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.acopio"
                           label="Acopio"
@@ -149,7 +149,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.eam"
                           label="EAM"
@@ -158,7 +158,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.encarg_estatal"
                           label="Encargado Estatal"
@@ -166,7 +166,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.industria"
                           label="Industria"
@@ -175,7 +175,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.cayo_cruz"
                           label="Cayo Cruz"
@@ -184,7 +184,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.i_ceballos"
                           label="I.Ceballos"
@@ -193,7 +193,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.fruta_select"
                           label="Fruta Selecta"
@@ -202,7 +202,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                        <v-col cols="4">
+                        <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.otros"
                           label="Otros"
@@ -211,7 +211,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.semilla"
                           label="Semilla"
@@ -220,7 +220,7 @@
                           min="0"
                         ></v-text-field>
                       </v-col>
-                      <v-col cols="4">
+                      <v-col cols="12" sm="4" xs="6">
                         <v-text-field
                           v-model="editedItem.es_camaguey"
                           label="E.S Camagüey"

@@ -16,7 +16,8 @@ class Quimico extends Model
         'area_aplicada',
         'area_acum',
         'comienza',
-        'termina'
+        'termina',
+        'ueb_id'
     ];
 
     public function ueb () 
@@ -26,5 +27,10 @@ class Quimico extends Model
     public function quimicos () 
     {
         return $this->belongsTo(Ueb::class);
+    }
+
+    public function incidencia_quimicos () 
+    {
+        return $this->belongsTo(IncidenciaQuimico::class);
     }
 }

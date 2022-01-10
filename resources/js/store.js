@@ -3,6 +3,8 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+// let user = window.localStorage.getItem('role')
+
 const authDefaultState = {
   user: null
 }
@@ -20,9 +22,14 @@ export default new Vuex.Store({
    mutations: {
      login(state, user) {
         state.auth.user = user
+
+        this.commit('saveRole')
      },
      logout(state) {
        state.auth.user = null
+     },
+     saveRole(state,) {
+       window.localStorage.setItem('role', JSON.stringify(state.auth.user.role.name))
      }
    }
 });

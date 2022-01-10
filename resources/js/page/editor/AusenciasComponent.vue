@@ -16,7 +16,6 @@
         'items-per-page-text': 'Ausencias por páginas',
       }"
     >
-   /
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Ausencias</v-toolbar-title>
@@ -28,9 +27,9 @@
                 <v-icon>mdi-plus</v-icon>
                 Añadir
               </v-btn>
-              <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
+              <!-- <v-btn @click="renderDoc" color="success" dark class="mb-2 mr-2">
                 Exportar a Word
-              </v-btn>
+              </v-btn> -->
             </template>
             <v-card>
               <v-card-title>
